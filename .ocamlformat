@@ -1,0 +1,4 @@
+type-decl = sparse
+field-space = tight-decl
+break-infix = fit-or-vertical
+break-cases = toplevel

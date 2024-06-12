@@ -17,12 +17,12 @@ type target =
   | Single
   | All
 
-type effect = 
+type effect =
   | Draw of int
   | Rent of {
-    amount: int;
-    target: target;
-  }
+      amount: int;
+      target: target;
+    }
 
 let play = function
   | DealBreaker -> failwith "todo"
@@ -36,16 +36,3 @@ let play = function
   | Hotel -> failwith "todo"
   | PassGo -> failwith "todo"
   | Rent _ -> failwith "todo"
-
-let show = function
-  | DealBreaker -> "DealBreaker"
-  | ForcedDeal -> "ForcedDeal"
-  | SlyDeal -> "SlyDeal"
-  | JustSayNo -> "JustSayNo"
-  | DebtCollector -> "DebtCollector"
-  | Birthday -> "Birthday"
-  | DoubleTheRent -> "DoubleTheRent"
-  | House -> "House"
-  | Hotel -> "Hotel"
-  | PassGo -> "PassGo"
-  | Rent _ -> "Rent"

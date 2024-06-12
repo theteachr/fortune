@@ -5,13 +5,12 @@ type t = {
   hand: Card.t list;
 }
 
-let play_property property player =
+let draw ?(n = 1) deck player =
+  let cards, deck = Deck.take n deck in
+  { player with hand = player.hand @ cards }, deck
+
+let add_property property player =
   { player with properties = property :: player.properties }
 
-let play_money money player =
-  { player with bank = money :: player.bank }
-
-let display_hand { hand; _ } =
-  hand |> List.map Card.show |> String.concat "\n"
-
-let create name = { name; bank = []; properties = []; hand = [] } 
+let add_money money player = { player with bank = money :: player.bank }
+let create name = { name; bank = []; properties = []; hand = [] }

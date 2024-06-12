@@ -11,7 +11,7 @@ module Round = struct
 
   let of_list = function
     | a :: b :: rest -> (a, b, rest)
-    | _ -> failwith "not enought players"
+    | _ -> failwith "not enough players"
 end
 
 type t = {
@@ -20,18 +20,14 @@ type t = {
   players: Player.t Round.t;
 }
 
-let display { draw_pile; players; _ } =
-  let player = Round.current players in
-  Printf.printf {|
-Monopoly Deal
-
-%s is playing.
-
-Hand -
-%s
-
-Properties -
-%s
-
-%d card(s) left in the deck.
-|} player.name "HAND" "PROPERTIES" (Deck.count draw_pile)
+let start players =
+  let draw_pile, players =
+    players
+    |> List.fold_left
+         (fun (deck, players) player ->
+           let player, deck = Player.draw ~n:5 deck player in
+           (deck, player :: players))
+         (Deck.default, [])
+  in
+  let players = players |> List.rev |> Round.of_list in
+  { draw_pile; players; play_pile = [] }
