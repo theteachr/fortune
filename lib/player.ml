@@ -7,7 +7,7 @@ type t = {
 
 let draw ?(n = 1) deck player =
   let cards, deck = Deck.take n deck in
-  { player with hand = player.hand @ cards }, deck
+  ({ player with hand = player.hand @ cards }, deck)
 
 let add_property property player =
   { player with properties = property :: player.properties }
