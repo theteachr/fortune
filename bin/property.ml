@@ -8,7 +8,7 @@ let show_dual ((a, b), choice) =
 let show_card : card -> string = function
   | Simple color -> Color.show color
   | Dual (a, b) -> Printf.sprintf "%s%s" (Color.show a) (Color.show b)
-  | Wild -> Printf.sprintf "Wild"
+  | Wild -> "Wild"
 
 let show : t -> string = function
   | Simple color -> Color.show color
