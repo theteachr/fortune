@@ -6,6 +6,6 @@ type t =
   | Magenta
   | Orange
   | Red
-  | Sky_blue
+  | SkyBlue
   | Turquoise
   | Yellow

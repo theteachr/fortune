@@ -1,4 +1,10 @@
-type rent
+type rent =
+  | Wild
+  | Dual of Color.t * Color.t
+
+type building =
+  | House
+  | Hotel
 
 type t =
   | DealBreaker
@@ -8,7 +14,6 @@ type t =
   | DebtCollector
   | Birthday
   | DoubleTheRent
-  | House
-  | Hotel
+  | Building of building
   | PassGo
   | Rent of rent
