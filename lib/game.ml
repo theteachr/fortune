@@ -21,13 +21,13 @@ type t = {
 }
 
 let start players =
+  let distribute (deck, players) player =
+    let cards, deck = Deck.take 5 deck in
+    let player = List.fold_left Player.take player cards in
+    (deck, player :: players)
+  in
   let draw_pile, players =
-    players
-    |> List.fold_left
-         (fun (deck, players) player ->
-           let player, deck = Player.draw ~n:5 deck player in
-           (deck, player :: players))
-         (Deck.default, [])
+    List.fold_left distribute (Deck.default, []) players
   in
   let players = players |> List.rev |> Round.of_list in
   { draw_pile; players; play_pile = [] }
