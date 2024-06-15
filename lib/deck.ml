@@ -70,13 +70,9 @@ let default =
       2 * (Red, Yellow);
     ]
   in
-  shuffle
-  @@ List.flatten
-  @@ properties
-  @ monies
-  @ actions
-  @ wild_properties
-  @ wild_rents
+  properties @ monies @ actions @ wild_properties @ wild_rents
+  |> List.flatten
+  |> shuffle
 
 let take n deck =
   let rec take' n cards = function
