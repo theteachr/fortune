@@ -14,65 +14,55 @@ let shuffle d =
 let default =
   let properties =
     let ( * ) = repeat (fun color -> Card.Property (Simple color)) in
-    [
-      2 * Blue;
-      2 * Brown;
-      3 * Green;
-      3 * SkyBlue;
-      3 * Orange;
-      3 * Magenta;
-      4 * Black;
-      3 * Red;
-      2 * Turquoise;
-      3 * Yellow;
-    ]
+    (2 * Blue)
+    @ (2 * Brown)
+    @ (3 * Green)
+    @ (3 * SkyBlue)
+    @ (3 * Orange)
+    @ (3 * Magenta)
+    @ (4 * Black)
+    @ (3 * Red)
+    @ (2 * Turquoise)
+    @ (3 * Yellow)
   in
   let monies =
     let ( * ) = repeat (fun value -> Card.Money (M value)) in
-    [ 2 * 5; 3 * 4; 3 * 3; 5 * 2; 6 * 1; 1 * 10 ]
+    (2 * 5) @ (3 * 4) @ (3 * 3) @ (5 * 2) @ (6 * 1) @ (1 * 10)
   in
   let actions =
     let ( * ) = repeat (fun action -> Card.Action action) in
-    [
-      2 * DealBreaker;
-      3 * JustSayNo;
-      3 * SlyDeal;
-      4 * ForcedDeal;
-      3 * DebtCollector;
-      3 * Birthday;
-      3 * Building House;
-      3 * Building Hotel;
-      2 * DoubleTheRent;
-      10 * PassGo;
-    ]
+    (2 * DealBreaker)
+    @ (3 * JustSayNo)
+    @ (3 * SlyDeal)
+    @ (4 * ForcedDeal)
+    @ (3 * DebtCollector)
+    @ (3 * Birthday)
+    @ (3 * Building House)
+    @ (3 * Building Hotel)
+    @ (2 * DoubleTheRent)
+    @ (10 * PassGo)
   in
   let wild_properties =
     let ( * ) = repeat (fun (a, b) -> Card.Property (Dual (a, b))) in
-    [
-      2 *. Card.Property Wild;
-      4 * (Blue, Green);
-      1 * (Turquoise, Brown);
-      4 * (Green, Black);
-      4 * (SkyBlue, Black);
-      2 * (Turquoise, Black);
-      2 * (Orange, Black);
-      2 * (Yellow, Red);
-    ]
+    (2 *. Card.Property Wild)
+    @ (4 * (Blue, Green))
+    @ (1 * (Turquoise, Brown))
+    @ (4 * (Green, Black))
+    @ (4 * (SkyBlue, Black))
+    @ (2 * (Turquoise, Black))
+    @ (2 * (Orange, Black))
+    @ (2 * (Yellow, Red))
   in
   let wild_rents =
     let ( * ) = repeat (fun (a, b) -> Card.Action (Rent (Dual (a, b)))) in
-    [
-      3 *. Card.Action (Rent Wild);
-      2 * (Green, Blue);
-      2 * (Brown, SkyBlue);
-      2 * (Magenta, Orange);
-      2 * (Black, Turquoise);
-      2 * (Red, Yellow);
-    ]
+    (3 *. Card.Action (Rent Wild))
+    @ (2 * (Green, Blue))
+    @ (2 * (Brown, SkyBlue))
+    @ (2 * (Magenta, Orange))
+    @ (2 * (Black, Turquoise))
+    @ (2 * (Red, Yellow))
   in
-  properties @ monies @ actions @ wild_properties @ wild_rents
-  |> List.flatten
-  |> shuffle
+  properties @ monies @ actions @ wild_properties @ wild_rents |> shuffle
 
 let take n deck =
   let rec take' n cards = function
