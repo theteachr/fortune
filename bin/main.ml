@@ -1,6 +1,6 @@
 let () =
-  [ "theteachr"; "injuly"; "kaus" ]
-  |> List.map Player.create
+  [ "theteachr"; "injuly"; "kaus"; "manas" ]
+  |> List.map Player.make
   |> Fortune.Game.start
   |> Show.game
   |> print_endline
