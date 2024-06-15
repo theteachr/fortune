@@ -8,7 +8,7 @@ let rgb = function
   | Magenta -> (214, 122, 177)
   | Orange -> (255, 120, 79)
   | Red -> (232, 49, 81)
-  | Sky_blue -> (132, 218, 235)
+  | SkyBlue -> (132, 218, 235)
   | Turquoise -> (148, 210, 189)
   | Yellow -> (244, 233, 0)
 
