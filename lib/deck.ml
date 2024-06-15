@@ -37,11 +37,11 @@ let default =
       2 * DealBreaker;
       3 * JustSayNo;
       3 * SlyDeal;
-      4 * ForcedDeal;
+      3 * ForcedDeal;
       3 * DebtCollector;
       3 * Birthday;
       3 * Building House;
-      3 * Building Hotel;
+      2 * Building Hotel;
       2 * DoubleTheRent;
       10 * PassGo;
     ]
@@ -49,25 +49,25 @@ let default =
   let wild_properties =
     let ( * ) = repeat (fun (a, b) -> Card.Property (Dual (a, b))) in
     [
-      2 *. Card.Property Wild;
-      4 * (Blue, Green);
-      1 * (Turquoise, Brown);
-      4 * (Green, Black);
-      4 * (SkyBlue, Black);
-      2 * (Turquoise, Black);
-      2 * (Orange, Black);
+      1 * (SkyBlue, Brown);
+      1 * (SkyBlue, Black);
+      2 * (Magenta, Orange);
       2 * (Yellow, Red);
+      1 * (Blue, Green);
+      1 * (Green, Black);
+      1 * (Black, Turquoise);
+      2 *. Card.Property Wild;
     ]
   in
   let wild_rents =
     let ( * ) = repeat (fun (a, b) -> Card.Action (Rent (Dual (a, b)))) in
     [
-      3 *. Card.Action (Rent Wild);
       2 * (Green, Blue);
       2 * (Brown, SkyBlue);
       2 * (Magenta, Orange);
       2 * (Black, Turquoise);
       2 * (Red, Yellow);
+      3 *. Card.Action (Rent Wild);
     ]
   in
   properties @ monies @ actions @ wild_properties @ wild_rents
