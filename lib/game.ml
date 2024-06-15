@@ -21,6 +21,7 @@ type t = {
 }
 
 let start players =
+  Printf.printf "%d cards found in the deck.\n" Deck.(count default);
   let distribute (deck, players) player =
     let cards, deck = Deck.take 5 deck in
     let player = List.fold_left Player.take player cards in
