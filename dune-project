@@ -5,22 +5,20 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github theteachr/fortune))
 
-(authors "Author Name")
+(authors "theteachr")
 
-(maintainers "Maintainer Name")
+(maintainers "theteachr")
 
 (license LICENSE)
 
-(documentation https://url/to/documentation)
-
 (package
  (name fortune)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "Monopoly Deal in OCaml")
+ (description "An implementation of Monopoly Deal in OCaml")
  (depends ocaml dune)
  (tags
-  (topics "to describe" your project)))
+  (card-game "monopoly deal")))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
