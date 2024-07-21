@@ -1,3 +1,8 @@
+let show_indexed show items =
+  items
+  |> List.mapi (fun i item -> Printf.sprintf "%d. %s" (i + 1) (show item))
+  |> String.concat "\n  "
+
 module Color = struct
   open Fortune.Color
 
@@ -74,10 +79,8 @@ end
 module Player = struct
   open Fortune.Player
 
-  let hand { hand; _ } = hand |> List.map Card.show |> String.concat "\n  "
-
-  let properties { properties; _ } =
-    properties |> List.map Property.show |> String.concat "\n  "
+  let hand { hand; _ } = show_indexed Card.show hand
+  let properties { properties; _ } = show_indexed Property.show properties
 end
 
 let game Fortune.Game.{ draw_pile; players; _ } =
