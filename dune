@@ -1,0 +1,1 @@
+(data_only_dirs node_modules esy.lock _esy)

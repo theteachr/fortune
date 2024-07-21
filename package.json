@@ -1,0 +1,37 @@
+{
+  "name": "dream-web-server-sessions",
+  "esy": {
+    "buildsInSource": "_build",
+    "build": "dune build -p forum",
+    "buildDev": "dune build"
+  },
+  "installConfig": { "pnp": false },
+  "scripts": { "bundle": "webpack", "dev": "webpack serve" },
+  "devDependencies": {
+    "@opam/ocamlformat": "*",
+    "@opam/ocamlformat-rpc": "*",
+    "@opam/ocaml-lsp-server": "*"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.11.2",
+    "@opam/dream": "*",
+    "@opam/dune": "*",
+    "@opam/reason": "*",
+    "@opam/reason-react": "*",
+    "@opam/server-reason-react": "*",
+    "@opam/styled-ppx": "0.56.0",
+    "@opam/routes": "*",
+    "ocaml": "5.x",
+    "react": "18.x",
+    "react-dom": "18.x",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-server": "^4.9.1"
+  },
+  "resolutions": {
+    "@opam/base": "v0.17.0",
+    "@opam/routes": "jchavarri/routes:routes.opam#57fb76038b429a6adb4e42aeef04cca7079fe157",
+    "@opam/ocp-indent": "OCamlPro/ocp-indent:ocp-indent.opam#7c4d434132cebc15a8213c8be9e7323692eb0a2b",
+    "esy-openssl": "ManasJayanth/esy-openssl:esy.json#9fa3c66632d4e5861a0a11c62f9237bba2af6f68"
+  }
+}

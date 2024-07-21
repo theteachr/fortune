@@ -1,0 +1,8 @@
+(melange.emit
+ (alias web)
+ (target app)
+ (libraries routes melange fortune_js reason-react)
+ (compile_flags -open Fortune_js)
+ (preprocess
+  (pps reason-react-ppx melange.ppx))
+ (module_systems commonjs))

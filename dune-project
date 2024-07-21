@@ -1,4 +1,5 @@
 (lang dune 3.15)
+(using melange 0.1)
 
 (name fortune)
 
