@@ -1,1 +1,11 @@
+# Dune
 _build/
+
+# esy
+_esy
+
+# esy and NPM
+node_modules
+
+# Emacs
+*~
