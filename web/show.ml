@@ -1,20 +1,20 @@
-let game Game.{ draw_pile; players; _ } =
-  let player = Game.Round.current players in
-  Printf.sprintf
-    {|
-  ==== MONOPOLY DEAL ====
+(* let game Game.{ draw_pile; players; _ } = *)
+(*   let player = Game.Round.current players in *)
+(*   Printf.sprintf *)
+(*     {| *)
+(*   ==== MONOPOLY DEAL ==== *)
 
-  %s is playing.
+(*   %s is playing. *)
 
-  Hand -
+(*   Hand - *)
 
-  %s
+(*   %s *)
 
-  Properties -
+(*   Properties - *)
 
-  %s
+(*   %s *)
 
-  %d card(s) left in the deck.
-|}
-    player.name (Player.hand player) (Player.properties player)
-    (Deck.count draw_pile)
+(*   %d card(s) left in the deck. *)
+(* |} *)
+(*     player.name (Player.hand player) (Player.properties player) *)
+(*     (Deck.count draw_pile) *)
