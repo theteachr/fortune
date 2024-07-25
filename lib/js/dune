@@ -4,8 +4,12 @@
  (libraries styled-ppx.css styled-ppx.emotion melange reason-react)
  (preprocess
   (pps
-    server-reason-react.browser_ppx -js
-    styled-ppx melange.ppx reason-react-ppx)))
+   server-reason-react.browser_ppx
+   -js
+   styled-ppx
+   melange.ppx
+   reason-react-ppx)))
 
 (copy_files# "../native/*.re*")
+
 (copy_files# "../native/*.ml*")

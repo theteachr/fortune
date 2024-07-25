@@ -101,5 +101,6 @@ let show_game Fortune.Game.{ draw_pile; players; _ } =
 
   %d card(s) left in the deck.
 |}
-    player.name (Player.show_hand player) (Player.show_properties player)
+    player.name (Player.show_hand player)
+    (Player.show_properties player)
     (Fortune.Deck.count draw_pile)
