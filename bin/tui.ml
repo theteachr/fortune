@@ -79,11 +79,11 @@ end
 module Player = struct
   open Fortune.Player
 
-  let hand { hand; _ } = show_indexed Card.show hand
-  let properties { properties; _ } = show_indexed Property.show properties
+  let show_hand { hand; _ } = show_indexed Card.show hand
+  let show_properties { properties; _ } = show_indexed Property.show properties
 end
 
-let game Fortune.Game.{ draw_pile; players; _ } =
+let show_game Fortune.Game.{ draw_pile; players; _ } =
   let player = Fortune.Game.Round.current players in
   Printf.sprintf
     {|
@@ -101,5 +101,5 @@ let game Fortune.Game.{ draw_pile; players; _ } =
 
   %d card(s) left in the deck.
 |}
-    player.name (Player.hand player) (Player.properties player)
+    player.name (Player.show_hand player) (Player.show_properties player)
     (Fortune.Deck.count draw_pile)
