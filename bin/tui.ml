@@ -1,7 +1,7 @@
 let show_indexed show items =
   items
   |> List.mapi (fun i item -> Printf.sprintf "%d. %s" (i + 1) (show item))
-  |> String.concat "\n  "
+  |> String.concat "\n"
 
 module Color = struct
   open Fortune.Color
@@ -81,26 +81,31 @@ module Player = struct
 
   let show_hand { hand; _ } = show_indexed Card.show hand
   let show_properties { properties; _ } = show_indexed Property.show properties
+  let show_bank { bank; _ } = show_indexed Money.show bank
 end
 
 let show_game Fortune.Game.{ draw_pile; players; _ } =
   let player = Fortune.Game.Round.current players in
   Printf.sprintf
     {|
-  ==== MONOPOLY DEAL ====
+==== MONOPOLY DEAL ====
 
-  %s is playing.
+%s is playing.
 
-  Hand -
+Hand -
 
-  %s
+%s
 
-  Properties -
+Bank -
 
-  %s
+%s
 
-  %d card(s) left in the deck.
+Properties -
+
+%s
+
+%d card(s) left in the deck.
 |}
-    player.name (Player.show_hand player)
+    player.name (Player.show_hand player) (Player.show_bank player)
     (Player.show_properties player)
     (Fortune.Deck.count draw_pile)
