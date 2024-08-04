@@ -16,5 +16,5 @@ let get n { hand; _ } = List.nth hand n
 
 let remove_from_hand n player =
   let card = List.nth player.hand n in
-  let hand = List.filter (fun c -> c != card) player.hand in
+  let hand = List.filter (( != ) card) player.hand in
   { player with hand }
