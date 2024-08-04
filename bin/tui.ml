@@ -1,6 +1,6 @@
 let show_indexed show items =
   items
-  |> List.mapi (fun i item -> Printf.sprintf "%d. %s" (i + 1) (show item))
+  |> List.mapi (fun i item -> Printf.sprintf "%d. %s" i (show item))
   |> String.concat "\n"
 
 module Color = struct
