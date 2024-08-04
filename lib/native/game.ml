@@ -22,14 +22,13 @@ type t = {
 }
 
 let start players =
-  Printf.printf "%d cards found in the deck.\n" Deck.(count default);
   (* Distribute 5 cards per player from the deck *)
-  let distribute (deck, players) player =
-    let cards, deck = Deck.take 5 deck in
-    let player = List.fold_left Player.take player cards in
-    (deck, player :: players)
-  in
   let draw_pile, players =
+    let distribute (deck, players) player =
+      let cards, deck = Deck.take 5 deck in
+      let player = List.fold_left Player.take player cards in
+      (deck, player :: players)
+    in
     List.fold_left distribute (Deck.default, []) players
   in
   let players = players |> List.rev |> Round.of_list in
@@ -37,5 +36,5 @@ let start players =
 
 let current_player { players; _ } = Round.current players
 
-let update_current_player player game =
+let set_current_player player game =
   { game with players = Round.set_current player game.players }
