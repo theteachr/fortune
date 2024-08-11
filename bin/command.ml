@@ -14,11 +14,11 @@ let parse line =
 let exec_play n game =
   let card = game |> Game.current_player |> Player.get n in
   match card with
-  | Card.Property (Simple color) ->
+  | Card.Property (Simple color as card) ->
       let player =
         game
         |> Game.current_player
-        |> Player.add_property (Property.use_simple color)
+        |> Player.add_property (Property.use card @@ Property.Simple_op color)
         |> Player.remove_from_hand n
       in
       game |> Game.set_current_player player

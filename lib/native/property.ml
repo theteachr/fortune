@@ -6,6 +6,11 @@ type card =
   | Dual of dual
   | Wild
 
+type _ op =
+  | Simple_op : Color.t -> simple op
+  | Dual_op : dual * Dual.choice -> (dual * Dual.choice) op
+  | Wild : Color.t -> Color.t op
+
 type t =
   | Simple of Color.t
   | Dual of Dual.t * Dual.choice
@@ -20,3 +25,10 @@ let color (card : t) =
 let use_simple color = Simple color
 let use_dual colors choice = Dual (colors, choice)
 let use_wild color = Wild color
+
+let use : type input. card -> input op -> t =
+ fun _card op ->
+  match op with
+  | Simple_op color -> Simple color
+  | Dual_op (dual, choice) -> Dual (dual, choice)
+  | Wild color -> Wild color
