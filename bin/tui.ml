@@ -84,7 +84,7 @@ module Player = struct
   let show_bank { bank; _ } = show_indexed Money.show bank
 end
 
-let show_game Fortune.Game.{ draw_pile; players; _ } =
+let show Fortune.Game.{ draw_pile; players; _ } =
   let player = Fortune.Game.Round.current players in
   Printf.sprintf
     {|
@@ -109,3 +109,9 @@ Properties -
     player.name (Player.show_hand player) (Player.show_bank player)
     (Player.show_properties player)
     (Fortune.Deck.count draw_pile)
+
+let clear_screen () = Sys.command "clear" |> ignore
+
+let draw game = 
+  clear_screen ();
+  game |> show |> print_endline

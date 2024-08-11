@@ -1,18 +1,18 @@
 open Fortune
 
-let clear_screen () = Sys.command "clear" |> ignore
-
-let rec loop game =
-  clear_screen ();
-  game |> Tui.show_game |> print_endline;
+let read_command () =
   print_string "> ";
-  read_line ()
-  |> Command.parse
-  |> Command.exec game
-  |> Option.fold ~none:() ~some:loop
+  () |> read_line |> Command.parse |> function
+  | Quit -> None
+  | command -> Some command
 
 let () =
-  [ "ocaml"; "reason"; "melange"; "dune" ]
-  |> List.map Player.make
-  |> Game.start
-  |> loop
+  let game =
+    [ "ocaml"; "reason"; "melange"; "dune" ]
+    |> List.map Player.make
+    |> Game.start
+  in
+  read_command
+  |> Seq.of_dispenser
+  |> Seq.scan Command.exec game
+  |> Seq.iter Tui.draw
