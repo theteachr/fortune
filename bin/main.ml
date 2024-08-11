@@ -9,10 +9,11 @@ let rec loop game =
   read_line ()
   |> Command.parse
   |> Command.exec game
-  |> Option.fold ~none:() ~some:loop
+  |> Option.map (fun game' -> (game, game'))
 
 let () =
   [ "ocaml"; "reason"; "melange"; "dune" ]
   |> List.map Player.make
   |> Game.start
-  |> loop
+  |> Seq.unfold loop
+  |> Seq.iter (fun game -> game |> Tui.show_game |> print_endline)
