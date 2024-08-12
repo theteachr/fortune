@@ -112,6 +112,6 @@ Properties -
 
 let clear_screen () = Sys.command "clear" |> ignore
 
-let draw game = 
+let draw game =
   clear_screen ();
   game |> show |> print_endline
