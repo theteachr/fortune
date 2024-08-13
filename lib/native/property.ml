@@ -1,22 +1,48 @@
-type simple = Color.t
-type dual = Dual.t
+module type S = sig
+  type inactive
+  type active
+  type activation
+
+  val color : active -> Color.t
+  val use : inactive -> activation -> active
+end
+
+module Simple : S with type inactive = Color.t with type activation = unit =
+struct
+  type inactive = Color.t
+  type active = Color.t
+  type activation = unit
+
+  let color x = x
+  let use card _ = card
+end
+
+module Dual : S = struct
+  type inactive = Dual.t
+  type activation = Dual.choice
+  type active = inactive * activation
+
+  let color = Dual.color
+  let use card choice = (card, choice)
+end
+
+module Wild : S = struct
+  type inactive = unit
+  type activation = Color.t
+  type active = Color.t
+
+  let color x = x
+  let use _ color = color
+end
 
 type card =
-  | Simple of simple
-  | Dual of dual
-  | Wild
+  | Simple of Simple.inactive
+  | Dual of Dual.inactive
+  | Wild of Wild.inactive
 
 type t =
-  | Simple of Color.t
-  | Dual of Dual.t * Dual.choice
-  | Wild of Color.t
+  | Simple of Simple.active
+  | Dual of Dual.active
+  | Wild of Wild.active
 
-let color (card : t) =
-  match card with
-  | Simple color -> color
-  | Dual (colors, choice) -> Dual.color (colors, choice)
-  | Wild color -> color
-
-let use_simple color = Simple color
-let use_dual colors choice = Dual (colors, choice)
-let use_wild color = Wild color
+let use card _ = Simple.use card ()

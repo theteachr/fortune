@@ -14,8 +14,8 @@ let parse line =
 let exec_play n game =
   let card, player = game |> Game.current_player |> Player.use_card n in
   match card with
-  | Card.Property (Simple color) ->
-      let property = Property.use_simple color in
+  | Card.Property (Simple property) ->
+      let property = Property.use property in
       let player = Player.add_property property player in
       Game.set_current_player player game
   | _ -> game
