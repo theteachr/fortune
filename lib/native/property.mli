@@ -1,19 +1,34 @@
-type simple = Color.t
-type dual = Dual.t
+module Simple : sig
+  type t
 
-(** [card] is inactive and lives in either a player's hand or in the deck. *)
+  val color : t -> Color.t
+end
+
+module DualWild : sig
+  type t
+
+  val colors : t -> Color.t * Color.t
+end
+
+module Wild : sig
+  type t
+end
+
 type card =
-  | Simple of simple
-  | Dual of dual
+  | Simple of Simple.t
+  | Dual of DualWild.t
   | Wild
 
-(** [t] represents a card that is currently used by a player (in their properties section). *)
-type t =
-  | Simple of Color.t
-  | Dual of Dual.t * Dual.choice
-  | Wild of Color.t
+type inactive
+type active
 
-val color : t -> Color.t
-val use_simple : simple -> t
-val use_dual : Dual.t -> Dual.choice -> t
-val use_wild : Color.t -> t
+type _ t =
+  | Inactive : card -> inactive t
+  | Simple : Simple.t -> active t
+  | Dual : DualWild.t * Dual.choice -> active t
+  | Wild : Color.t -> active t
+
+val color : active t -> Color.t
+val use_simple : Simple.t -> active t
+val use_dual : DualWild.t -> Dual.choice -> active t
+val use_wild : Color.t -> active t

@@ -1,18 +1,34 @@
-type simple = Color.t
-type dual = Dual.t
+type inactive
+type active
+
+module Simple = struct
+  type t = Color.t
+
+  let color x = x
+end
+
+module DualWild = struct
+  type t = Dual.t
+
+  let colors x = x
+end
+
+module Wild = struct
+  type t
+end
 
 type card =
-  | Simple of simple
-  | Dual of dual
+  | Simple of Simple.t
+  | Dual of DualWild.t
   | Wild
 
-type t =
-  | Simple of Color.t
-  | Dual of Dual.t * Dual.choice
-  | Wild of Color.t
+type _ t =
+  | Inactive : card -> inactive t
+  | Simple : Simple.t -> active t
+  | Dual : DualWild.t * Dual.choice -> active t
+  | Wild : Color.t -> active t
 
-let color (card : t) =
-  match card with
+let color = function
   | Simple color -> color
   | Dual (colors, choice) -> Dual.color (colors, choice)
   | Wild color -> color

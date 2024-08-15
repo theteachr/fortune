@@ -1,7 +1,7 @@
 type t = {
   name: string;
   bank: Money.t list;
-  properties: Property.t list;
+  properties: Property.active Property.t list;
   hand: Card.t list;
 }
 

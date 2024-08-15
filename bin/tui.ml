@@ -26,19 +26,25 @@ end
 module Property = struct
   open Fortune.Property
 
-  let show_dual ((a, b), choice) =
+  let show_dual (dual, choice) =
+    let a, b = DualWild.colors dual in
     match choice with
     | Dual.L -> Printf.sprintf "[%s]%s" (Color.show a) (Color.show b)
     | R -> Printf.sprintf "%s[%s]" (Color.show a) (Color.show b)
 
+  let show_simple card = card |> Simple.color |> Color.show
+
   let show_card : card -> string = function
-    | Simple color -> Color.show color
-    | Dual (a, b) -> Printf.sprintf "%s%s" (Color.show a) (Color.show b)
+    | Simple card -> show_simple card
+    | Dual card ->
+        card |> DualWild.colors |> fun (a, b) ->
+        Printf.sprintf "%s%s" (Color.show a) (Color.show b)
     | Wild -> "Wild"
 
-  let show : t -> string = function
-    | Simple color -> Color.show color
-    | Dual (colors, choice) -> show_dual (colors, choice)
+  let show : active t -> string = function
+    | Inactive card -> show_card card
+    | Simple card -> show_simple card
+    | Dual (dual, choice) -> show_dual (dual, choice)
     | Wild color -> Printf.sprintf "Wild %s" (Color.show color)
 end
 
