@@ -6,8 +6,10 @@ let read_command () =
   | Quit -> None
   | command -> Some command
 
-let () =
-  let game =
+let ( let* ) = Option.bind
+
+let _ =
+  let* game =
     [ "ocaml"; "reason"; "melange"; "dune" ]
     |> List.map Player.make
     |> Game.start
@@ -16,3 +18,4 @@ let () =
   |> Seq.of_dispenser
   |> Seq.scan Command.exec game
   |> Seq.iter Tui.draw
+  |> Option.some

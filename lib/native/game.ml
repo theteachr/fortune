@@ -1,29 +1,21 @@
 module Round = struct
   type 'a t = 'a * 'a * 'a list
 
-  let current (player, _, _) = player
-  let opponents (_, next, rest) = (next, rest)
-  let set_current curr (_, next, rest) = (curr, next, rest)
-
-  let step (curr, next, rest) =
-    match rest with
-    | [] -> (next, curr, [])
-    | h :: t -> (next, h, t @ [ curr ])
+  let current (a, _, _) = a
+  let set_current curr (_, b, rest) = (curr, b, rest)
 
   let of_list = function
-    | a :: b :: rest -> (a, b, rest)
-    | _ -> failwith "not enough players"
+    | a :: b :: rest -> Some (a, b, rest)
+    | _ -> None
 end
 
-type t = {
-  draw_pile: Deck.t;
-  play_pile: Card.t list;
-  players: Player.t Round.t;
-}
+type t = { players: Player.t Round.t }
+
+let ( let* ) = Option.bind
 
 let start players =
   (* Distribute 5 cards per player from the deck *)
-  let draw_pile, players =
+  let _, players =
     let distribute (deck, players) player =
       let cards, deck = Deck.take 5 deck in
       let player = List.fold_left Player.take player cards in
@@ -31,10 +23,19 @@ let start players =
     in
     List.fold_left distribute (Deck.default, []) players
   in
-  let players = players |> List.rev |> Round.of_list in
-  { draw_pile; players; play_pile = [] }
+  let* players = players |> List.rev |> Round.of_list in
+  Some { players }
 
 let current_player { players; _ } = Round.current players
 
-let set_current_player player game =
-  { game with players = Round.set_current player game.players }
+let play_card ({ players } as game) card =
+  match card with
+  | Card.Property (Simple color) ->
+      let player =
+        players
+        |> Round.current
+        |> Player.add_property (Property.use_simple color)
+        |> Player.remove_from_hand card
+      in
+      { players = Round.set_current player players }
+  | _ -> game

@@ -82,15 +82,9 @@ module Player = struct
   let show_hand { hand; _ } = show_indexed Card.show hand
   let show_properties { properties; _ } = show_indexed Property.show properties
   let show_bank { bank; _ } = show_indexed Money.show bank
-end
 
-let show Fortune.Game.{ draw_pile; players; _ } =
-  let player = Fortune.Game.Round.current players in
-  Printf.sprintf
-    {|
-==== MONOPOLY DEAL ====
-
-%s is playing.
+  let show player =
+    Printf.sprintf {|%s
 
 Hand -
 
@@ -103,12 +97,17 @@ Bank -
 Properties -
 
 %s
+|} player.name
+      (show_hand player) (show_bank player) (show_properties player)
+end
 
-%d card(s) left in the deck.
+let show game =
+  Printf.sprintf {|
+==== MONOPOLY DEAL ====
+
+%s
 |}
-    player.name (Player.show_hand player) (Player.show_bank player)
-    (Player.show_properties player)
-    (Fortune.Deck.count draw_pile)
+    (game |> Game.current_player |> Player.show)
 
 let clear_screen () = Sys.command "clear" |> ignore
 

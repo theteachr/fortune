@@ -11,15 +11,6 @@ let parse line =
   | [ "q" ] -> Quit
   | _ -> Bad
 
-let exec_play n game =
-  let card, player = game |> Game.current_player |> Player.use_card n in
-  match card with
-  | Card.Property (Simple color) ->
-      let property = Property.use_simple color in
-      let player = Player.add_property property player in
-      Game.set_current_player player game
-  | _ -> game
-
 let exec game = function
-  | Play n -> exec_play n game
+  | Play n -> game |> Game.current_player |> Player.get n |> Game.play_card game
   | Bad | Quit -> game
