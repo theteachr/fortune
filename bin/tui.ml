@@ -114,4 +114,9 @@ let clear_screen () = Sys.command "clear" |> ignore
 
 let draw game =
   clear_screen ();
-  game |> show |> print_endline
+  game
+  |> show
+  |> String.split_on_char '\n'
+  |> List.map (( ^ ) @@ String.make 4 ' ')
+  |> String.concat "\n"
+  |> print_endline
