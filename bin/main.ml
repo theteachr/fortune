@@ -15,4 +15,5 @@ let () =
   |> Seq.of_dispenser
   |> Seq.filter_map Command.parse
   |> Seq.scan Command.exec game
+  |> Seq.take_while Game.is_not_over
   |> Seq.iter Tui.draw

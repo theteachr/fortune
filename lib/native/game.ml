@@ -38,3 +38,5 @@ let current_player { players; _ } = Round.current players
 
 let set_current_player player game =
   { game with players = Round.set_current player game.players }
+
+let is_not_over _ = true
