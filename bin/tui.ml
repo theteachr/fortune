@@ -34,36 +34,37 @@ module Property = struct
   let show_card : card -> string = function
     | Simple color -> Color.show color
     | Dual (a, b) -> Printf.sprintf "%s%s" (Color.show a) (Color.show b)
-    | Wild -> "Wild"
+    | Wild -> "WILD PROPERTY"
 
   let show : t -> string = function
     | Simple color -> Color.show color
     | Dual (colors, choice) -> show_dual (colors, choice)
-    | Wild color -> Printf.sprintf "Wild %s" (Color.show color)
+    | Wild color -> Printf.sprintf "WILD %s" (Color.show color)
 end
 
 module Action = struct
   open Fortune.Action
 
   let show = function
-    | DealBreaker -> "DealBreaker"
-    | ForcedDeal -> "ForcedDeal"
-    | SlyDeal -> "SlyDeal"
-    | JustSayNo -> "JustSayNo"
-    | DebtCollector -> "DebtCollector"
-    | Birthday -> "Birthday"
-    | DoubleTheRent -> "DoubleTheRent"
-    | Building House -> "House"
-    | Building Hotel -> "Hotel"
-    | PassGo -> "PassGo"
-    | Rent _ -> "Rent"
+    | DealBreaker -> "DEAL BREAKER"
+    | ForcedDeal -> "FORCED DEAL"
+    | SlyDeal -> "SLY DEAL"
+    | JustSayNo -> "JUST SAY NO"
+    | DebtCollector -> "DEBT COLLECTOR"
+    | Birthday -> "BIRTHDAY"
+    | DoubleTheRent -> "DOUBLE THE RENT"
+    | Building House -> "HOUSE"
+    | Building Hotel -> "HOTEL"
+    | PassGo -> "PASS GO"
+    | Rent (Dual (a, b)) -> Printf.sprintf "%s%s RENT" (Color.show a) (Color.show b)
+    | Rent Wild -> "WILD RENT"
 end
 
 module Money = struct
   open Fortune.Money
 
   let show = function
-    | M value -> Printf.sprintf "%d M" value
+    | M value -> Printf.sprintf "M%d" value
     | Action action -> Printf.sprintf "%s" (Action.show action)
 end
 
