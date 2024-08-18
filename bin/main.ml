@@ -2,9 +2,8 @@ open Fortune
 
 let read_command () =
   print_string "> ";
-  () |> read_line |> Command.parse |> function
-  | Quit -> None
-  | command -> Some command
+  let line = read_line () in
+  if line = "q" then None else Some line
 
 let () =
   let game =
@@ -14,5 +13,6 @@ let () =
   in
   read_command
   |> Seq.of_dispenser
+  |> Seq.filter_map Command.parse
   |> Seq.scan Command.exec game
   |> Seq.iter Tui.draw

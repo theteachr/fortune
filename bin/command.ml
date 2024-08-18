@@ -1,15 +1,11 @@
-type t =
-  | Play of int
-  | Quit
-  | Bad
+type t = Play of int
 
 let play n = Play n
 
 let parse line =
   line |> String.split_on_char ' ' |> function
-  | [ "p"; n ] -> n |> int_of_string_opt |> Option.fold ~none:Bad ~some:play
-  | [ "q" ] -> Quit
-  | _ -> Bad
+  | [ "p"; n ] -> n |> int_of_string_opt |> Option.map play
+  | _ -> None
 
 let exec_play n game =
   let card, player = game |> Game.current_player |> Player.use_card n in
@@ -22,4 +18,3 @@ let exec_play n game =
 
 let exec game = function
   | Play n -> exec_play n game
-  | Bad | Quit -> game
