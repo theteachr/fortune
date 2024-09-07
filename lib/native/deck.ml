@@ -2,7 +2,6 @@ type t = Card.t list
 
 let count = List.length
 let ( *. ) n card = List.init n (Fun.const card)
-let repeat f n x = List.init n (Fun.const @@ f x)
 
 let shuffle d =
   Random.self_init ();
@@ -13,7 +12,7 @@ let shuffle d =
 
 let default =
   let properties =
-    let ( * ) = repeat (fun color -> Card.Property (Simple color)) in
+    let ( * ) n color = n *. Card.simple_property color in
     [
       2 * Blue;
       2 * Brown;
@@ -28,11 +27,11 @@ let default =
     ]
   in
   let monies =
-    let ( * ) = repeat (fun value -> Card.Money (M value)) in
+    let ( * ) n value = n *. Card.money value in
     [ 2 * 5; 3 * 4; 3 * 3; 5 * 2; 6 * 1; 1 * 10 ]
   in
   let actions =
-    let ( * ) = repeat (fun action -> Card.Action action) in
+    let ( * ) n action = n *. Card.action action in
     [
       2 * DealBreaker;
       3 * JustSayNo;
@@ -47,7 +46,7 @@ let default =
     ]
   in
   let wild_properties =
-    let ( * ) = repeat (fun (a, b) -> Card.Property (Dual (a, b))) in
+    let ( * ) n colors= n *. Card.dual_property colors in
     [
       1 * (SkyBlue, Brown);
       1 * (SkyBlue, Black);
@@ -56,18 +55,18 @@ let default =
       1 * (Blue, Green);
       1 * (Green, Black);
       1 * (Black, Turquoise);
-      2 *. Card.Property Wild;
+      2 *. Card.wild_property;
     ]
   in
   let wild_rents =
-    let ( * ) = repeat (fun (a, b) -> Card.Action (Rent (Dual (a, b)))) in
+    let ( * ) n colors = n *. Card.rent colors in
     [
       2 * (Green, Blue);
       2 * (Brown, SkyBlue);
       2 * (Magenta, Orange);
       2 * (Black, Turquoise);
       2 * (Red, Yellow);
-      3 *. Card.Action (Rent Wild);
+      3 *. Card.wild_rent;
     ]
   in
   properties @ monies @ actions @ wild_properties @ wild_rents
