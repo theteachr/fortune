@@ -1,9 +1,9 @@
 type t =
-  | Money of Money.t
+  | Money of int
   | Property of Property.card
   | Action of Action.t
 
-let money value = Money (M value)
+let money value = Money value
 let simple_property color = Property (Simple color)
 let dual_property colors = Property (Dual colors)
 let action a = Action a
