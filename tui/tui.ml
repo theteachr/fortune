@@ -6,6 +6,18 @@ let show_indexed show items =
 module Color = struct
   open Fortune.Color
 
+  let color_name = function
+    | Black -> "BLACK"
+    | Blue -> "BLUE"
+    | Brown -> "BROWN"
+    | Green -> "GREEN"
+    | Magenta -> "MAGENTA"
+    | Orange -> "ORANGE"
+    | Red -> "RED"
+    | SkyBlue -> "SKYBLUE"
+    | Turquoise -> "TURQUOISE"
+    | Yellow -> "YELLOW"
+
   let rgb = function
     | Black -> (0, 0, 0)
     | Blue -> (10, 147, 150)
@@ -18,9 +30,9 @@ module Color = struct
     | Turquoise -> (148, 210, 189)
     | Yellow -> (244, 233, 0)
 
-  let show color =
-    let r, g, b = rgb color in
-    Printf.sprintf "\x1b[38;2;%d;%d;%dm●\x1b[0m" r g b
+  let show color = color_name color
+  (* let r, g, b = rgb color in *)
+  (* Printf.sprintf "\x1b[38;2;%d;%d;%dm●\x1b[0m" r g b *)
 end
 
 module Property = struct
@@ -28,7 +40,7 @@ module Property = struct
 
   let show_dual ((a, b), choice) =
     match choice with
-    | Dual.L -> Printf.sprintf "[%s]%s" (Color.show a) (Color.show b)
+    | Fortune.Dual.L -> Printf.sprintf "[%s]%s" (Color.show a) (Color.show b)
     | R -> Printf.sprintf "%s[%s]" (Color.show a) (Color.show b)
 
   let show_card : card -> string = function
@@ -115,10 +127,8 @@ Properties -
 let clear_screen () = Sys.command "clear" |> ignore
 
 let draw game =
-  clear_screen ();
   game
   |> show
   |> String.split_on_char '\n'
   |> List.map (( ^ ) @@ String.make 4 ' ')
   |> String.concat "\n"
-  |> print_endline

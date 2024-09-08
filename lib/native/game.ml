@@ -40,3 +40,12 @@ let set_current_player player game =
   { game with players = Round.set_current player game.players }
 
 let is_not_over _ = true
+
+let play_card n game =
+  let card, player = Player.use_card n (current_player game) in
+  match card with
+  | Card.Property (Simple color) ->
+      let property = Property.use_simple color in
+      let player = Player.add_property property player in
+      set_current_player player game
+  | _ -> game
