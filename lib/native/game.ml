@@ -21,7 +21,7 @@ type t = {
   players: Player.t Round.t;
 }
 
-let start players =
+let start deck players =
   (* Distribute 5 cards per player from the deck *)
   let draw_pile, players =
     let distribute (deck, players) player =
@@ -29,7 +29,7 @@ let start players =
       let player = List.fold_left Player.take player cards in
       (deck, player :: players)
     in
-    List.fold_left distribute (Deck.default, []) players
+    List.fold_left distribute (deck, []) players
   in
   let players = players |> List.rev |> Round.of_list in
   { draw_pile; players; play_pile = [] }
@@ -47,5 +47,8 @@ let play_card n game =
   | Card.Property (Simple color) ->
       let property = Property.use_simple color in
       let player = Player.add_property property player in
+      set_current_player player game
+  | Card.Money value ->
+      let player = Player.add_money (M value) player in
       set_current_player player game
   | _ -> game

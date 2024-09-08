@@ -85,7 +85,7 @@ module Card = struct
   open Fortune.Card
 
   let show = function
-    | Money money -> Int.to_string money
+    | Money money -> Printf.sprintf "M%d" money
     | Property property -> Property.show_card property
     | Action action -> Action.show action
 end

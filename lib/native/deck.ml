@@ -3,8 +3,10 @@ type t = Card.t list
 let count = List.length
 let ( *. ) n card = List.init n (Fun.const card)
 
-let shuffle d =
-  Random.self_init ();
+let shuffle ?seed d =
+  (match seed with
+  | None -> Random.self_init ()
+  | Some n -> Random.init n);
   d
   |> List.map (fun c -> (Random.bits (), c))
   |> List.sort compare

@@ -6,10 +6,11 @@ let read_command () =
   if line = "q" then None else Some line
 
 let () =
+  let deck = Deck.(shuffle default) in
   let game =
     [ "ocaml"; "reason"; "melange"; "dune" ]
     |> List.map Player.make
-    |> Game.start
+    |> Game.start deck
   in
   read_command
   |> Seq.of_dispenser
