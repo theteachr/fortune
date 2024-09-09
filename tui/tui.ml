@@ -136,3 +136,5 @@ let draw game =
   |> String.split_on_char '\n'
   |> List.map (( ^ ) @@ String.make 4 ' ')
   |> String.concat "\n"
+
+let render game = game |> show |> print_endline
