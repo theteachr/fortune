@@ -10,6 +10,8 @@ let game deck =
   |> List.map ~f:Player.make
   |> Game.start deck
 
+let render game = game |> Tui.show |> print_string
+
 let shuffled_deck = Deck.(shuffle ~seed:10 default)
 
 let%expect_test "remove_from_hand works" =
@@ -32,7 +34,7 @@ let%expect_test "remove_from_hand works" =
 
 let%expect_test "default game" =
   let game = game Deck.default in
-  Tui.render game;
+  render game;
   [%expect
     {|
     ocaml
@@ -56,7 +58,7 @@ let%expect_test "default game" =
     86 card(s) left in the deck.
     |}];
   let game = Game.play_card 0 game in
-  Tui.render game;
+  render game;
   [%expect
     {|
     ocaml
@@ -78,7 +80,7 @@ let%expect_test "default game" =
 
     86 card(s) left in the deck.
     |}];
-  game |> Game.play_card 2 |> Tui.render;
+  game |> Game.play_card 2 |> render;
   [%expect
     {|
     ocaml
@@ -103,7 +105,7 @@ let%expect_test "default game" =
 
 let%expect_test "playing a money card should work" =
   let game = game shuffled_deck in
-  Tui.render game;
+  render game;
   [%expect
     {|
     ocaml
@@ -125,7 +127,7 @@ let%expect_test "playing a money card should work" =
 
 
     86 card(s) left in the deck. |}];
-  game |> Game.play_card 1 |> Tui.render;
+  game |> Game.play_card 1 |> render;
   [%expect
     {|
     ocaml

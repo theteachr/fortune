@@ -130,11 +130,11 @@ let show game =
 
 let clear_screen () = Sys.command "clear" |> ignore
 
-let draw game =
+let render ?(padding = 4) game =
+  clear_screen ();
   game
   |> show
   |> String.split_on_char '\n'
-  |> List.map (( ^ ) @@ String.make 4 ' ')
+  |> List.map (( ^ ) @@ String.make padding ' ')
   |> String.concat "\n"
 
-let render game = game |> show |> print_endline
