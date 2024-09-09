@@ -17,7 +17,4 @@ let () =
   |> Seq.filter_map Command.parse
   |> Seq.scan Command.exec game
   |> Seq.take_while Game.is_not_over
-  |> Seq.map Tui.draw
-  |> Seq.iter (fun s ->
-         Tui.clear_screen ();
-         print_endline s)
+  |> Seq.iter Tui.render
