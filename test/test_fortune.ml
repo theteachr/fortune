@@ -11,7 +11,6 @@ let game deck =
   |> Game.start deck
 
 let render game = game |> Tui.show |> print_string
-
 let shuffled_deck = Deck.(shuffle ~seed:10 default)
 
 let%expect_test "remove_from_hand works" =

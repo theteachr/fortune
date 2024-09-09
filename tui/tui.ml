@@ -137,4 +137,4 @@ let render ?(padding = 4) game =
   |> String.split_on_char '\n'
   |> List.map (( ^ ) @@ String.make padding ' ')
   |> String.concat "\n"
-
+  |> print_endline
