@@ -1,3 +1,12 @@
+let read_input () =
+  print_string "> ";
+  match read_line () with
+  | "q" -> None
+  | line -> Some line
+
+let parse_input = Command.parse
+let update = Command.exec
+
 let show_indexed show items =
   items
   |> List.mapi (fun i item -> Printf.sprintf "%d. %s" i (show item))

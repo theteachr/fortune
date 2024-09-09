@@ -8,4 +8,4 @@ let parse line =
   | _ -> None
 
 let exec game = function
-  | Play n -> Game.play_card n game
+  | Play n -> Fortune.Game.play_card n game
