@@ -74,7 +74,7 @@ module Action = struct
     | Building Hotel -> "HOTEL"
     | PassGo -> "PASS GO"
     | Rent (Dual (a, b)) ->
-        Printf.sprintf "%s%s RENT" (Color.show a) (Color.show b)
+        Printf.sprintf "RENT: %s %s" (Color.show a) (Color.show b)
     | Rent Wild -> "WILD RENT"
 end
 

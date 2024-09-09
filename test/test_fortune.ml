@@ -11,7 +11,6 @@ let game deck =
   |> Game.start deck
 
 let render_game game = game |> Tui.draw |> print_endline
-
 let shuffled_deck = Deck.(shuffle ~seed:10 default)
 
 let%expect_test "remove_from_hand works" =
@@ -35,7 +34,8 @@ let%expect_test "remove_from_hand works" =
 let%expect_test "default game" =
   let game = game Deck.default in
   render_game game;
-  [%expect {|
+  [%expect
+    {|
     ocaml
 
     Hand -
@@ -58,7 +58,8 @@ let%expect_test "default game" =
     |}];
   let game = Game.play_card 0 game in
   render_game game;
-  [%expect {|
+  [%expect
+    {|
     ocaml
 
     Hand -
@@ -78,10 +79,7 @@ let%expect_test "default game" =
 
     86 card(s) left in the deck.
     |}];
-  game
-  |> Game.play_card 2
-  |> Tui.draw
-  |> print_endline;
+  game |> Game.play_card 2 |> render_game;
   [%expect
     {|
     ocaml
@@ -105,7 +103,7 @@ let%expect_test "default game" =
     |}]
 
 let%expect_test "playing a money card should work" =
-  shuffled_deck |> game |> Game.play_card 1 |> Tui.draw |> print_endline;
+  shuffled_deck |> game |> Game.play_card 1 |> render_game;
   [%expect
     {|
     ocaml
@@ -113,7 +111,7 @@ let%expect_test "playing a money card should work" =
     Hand -
 
     0. SKYBLUE BROWN
-    1. BROWNSKYBLUE RENT
+    1. RENT: BROWN SKYBLUE
     2. PASS GO
     3. JUST SAY NO
 
