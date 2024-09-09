@@ -6,6 +6,18 @@ let show_indexed show items =
 module Color = struct
   open Fortune.Color
 
+  let name = function
+    | Black -> "BLACK"
+    | Blue -> "BLUE"
+    | Brown -> "BROWN"
+    | Green -> "GREEN"
+    | Magenta -> "MAGENTA"
+    | Orange -> "ORANGE"
+    | Red -> "RED"
+    | SkyBlue -> "SKYBLUE"
+    | Turquoise -> "TURQUOISE"
+    | Yellow -> "YELLOW"
+
   let rgb = function
     | Black -> (0, 0, 0)
     | Blue -> (10, 147, 150)
@@ -18,7 +30,12 @@ module Color = struct
     | Turquoise -> (148, 210, 189)
     | Yellow -> (244, 233, 0)
 
-  let show color =
+  (* TODO: Separate the ASCII representation from here.
+     ASCII representation is better for expect tests, but use colors for the
+     actual game. *)
+  let show color = name color
+
+  let show_dot color =
     let r, g, b = rgb color in
     Printf.sprintf "\x1b[38;2;%d;%d;%dm●\x1b[0m" r g b
 end
@@ -28,12 +45,12 @@ module Property = struct
 
   let show_dual ((a, b), choice) =
     match choice with
-    | Dual.L -> Printf.sprintf "[%s]%s" (Color.show a) (Color.show b)
-    | R -> Printf.sprintf "%s[%s]" (Color.show a) (Color.show b)
+    | Fortune.Dual.L -> Printf.sprintf "[%s] %s" (Color.show a) (Color.show b)
+    | R -> Printf.sprintf "%s [%s]" (Color.show a) (Color.show b)
 
   let show_card : card -> string = function
     | Simple color -> Color.show color
-    | Dual (a, b) -> Printf.sprintf "%s%s" (Color.show a) (Color.show b)
+    | Dual (a, b) -> Printf.sprintf "%s %s" (Color.show a) (Color.show b)
     | Wild -> "WILD PROPERTY"
 
   let show : t -> string = function
@@ -57,7 +74,7 @@ module Action = struct
     | Building Hotel -> "HOTEL"
     | PassGo -> "PASS GO"
     | Rent (Dual (a, b)) ->
-        Printf.sprintf "%s%s RENT" (Color.show a) (Color.show b)
+        Printf.sprintf "RENT: %s %s" (Color.show a) (Color.show b)
     | Rent Wild -> "WILD RENT"
 end
 
@@ -73,7 +90,7 @@ module Card = struct
   open Fortune.Card
 
   let show = function
-    | Money money -> Money.show money
+    | Money money -> Printf.sprintf "M%d" money
     | Property property -> Property.show_card property
     | Action action -> Action.show action
 end
@@ -81,18 +98,12 @@ end
 module Player = struct
   open Fortune.Player
 
-  let show_hand { hand; _ } = show_indexed Card.show hand
-  let show_properties { properties; _ } = show_indexed Property.show properties
-  let show_bank { bank; _ } = show_indexed Money.show bank
-end
+  let show_hand hand = show_indexed Card.show hand
+  let show_properties properties = show_indexed Property.show properties
+  let show_bank bank = show_indexed Money.show bank
 
-let show Fortune.Game.{ draw_pile; players; _ } =
-  let player = Fortune.Game.Round.current players in
-  Printf.sprintf
-    {|
-==== MONOPOLY DEAL ====
-
-%s is playing.
+  let show { hand; properties; bank; name } =
+    Printf.sprintf {|%s
 
 Hand -
 
@@ -104,21 +115,26 @@ Bank -
 
 Properties -
 
-%s
+%s|} name
+      (show_hand hand) (show_bank bank)
+      (show_properties properties)
+end
+
+let show game =
+  Printf.sprintf {|%s
 
 %d card(s) left in the deck.
 |}
-    player.name (Player.show_hand player) (Player.show_bank player)
-    (Player.show_properties player)
-    (Fortune.Deck.count draw_pile)
+    (game |> Fortune.Game.current_player |> Player.show)
+    (Fortune.Deck.count game.draw_pile)
 
 let clear_screen () = Sys.command "clear" |> ignore
 
 let draw game =
-  clear_screen ();
   game
   |> show
   |> String.split_on_char '\n'
   |> List.map (( ^ ) @@ String.make 4 ' ')
   |> String.concat "\n"
-  |> print_endline
+
+let render game = game |> show |> print_endline

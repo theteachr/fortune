@@ -2,4 +2,4 @@
  (public_name fortune)
  (name main)
  (flags -open Fortune)
- (libraries fortune))
+ (libraries fortune tui))

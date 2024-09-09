@@ -1,2 +1,6 @@
-(test
- (name test_fortune))
+(library
+ (name test_fortune)
+ (preprocess
+  (pps ppx_inline_test ppx_assert ppx_expect))
+ (libraries fortune tui base stdio)
+ (inline_tests))

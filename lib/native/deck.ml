@@ -3,8 +3,10 @@ type t = Card.t list
 let count = List.length
 let ( *. ) n card = List.init n (Fun.const card)
 
-let shuffle d =
-  Random.self_init ();
+let shuffle ?seed d =
+  (match seed with
+  | None -> Random.self_init ()
+  | Some n -> Random.init n);
   d
   |> List.map (fun c -> (Random.bits (), c))
   |> List.sort compare
@@ -46,7 +48,7 @@ let default =
     ]
   in
   let wild_properties =
-    let ( * ) n colors= n *. Card.dual_property colors in
+    let ( * ) n colors = n *. Card.dual_property colors in
     [
       1 * (SkyBlue, Brown);
       1 * (SkyBlue, Black);
@@ -69,9 +71,7 @@ let default =
       3 *. Card.wild_rent;
     ]
   in
-  properties @ monies @ actions @ wild_properties @ wild_rents
-  |> List.flatten
-  |> shuffle
+  properties @ monies @ actions @ wild_properties @ wild_rents |> List.flatten
 
 let take n deck =
   let rec take' n cards = function
