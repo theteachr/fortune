@@ -102,7 +102,30 @@ let%expect_test "default game" =
     |}]
 
 let%expect_test "playing a money card should work" =
-  shuffled_deck |> game |> Game.play_card 1 |> Tui.render;
+  let game = game shuffled_deck in
+  Tui.render game;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. SKYBLUE BROWN
+    1. M4
+    2. RENT: BROWN SKYBLUE
+    3. PASS GO
+    4. JUST SAY NO
+
+    Bank -
+
+
+
+    Properties -
+
+
+
+    86 card(s) left in the deck. |}];
+  game |> Game.play_card 1 |> Tui.render;
   [%expect
     {|
     ocaml
