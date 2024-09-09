@@ -6,7 +6,7 @@ let show_indexed show items =
 module Color = struct
   open Fortune.Color
 
-  let color_name = function
+  let name = function
     | Black -> "BLACK"
     | Blue -> "BLUE"
     | Brown -> "BROWN"
@@ -33,7 +33,7 @@ module Color = struct
   (* TODO: Separate the ASCII representation from here.
      ASCII representation is better for expect tests, but use colors for the
      actual game. *)
-  let show color = color_name color
+  let show color = name color
 
   let show_dot color =
     let r, g, b = rgb color in
