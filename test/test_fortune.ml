@@ -1,6 +1,7 @@
 open Base
 open Fortune
 open Stdio
+module Tui = Tui.Make (Tui.Color_ascii)
 
 let%test_unit "106 cards in the shuffled deck" =
   [%test_eq: int] 106 Deck.(count default)

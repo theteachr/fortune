@@ -1,4 +1,5 @@
 open Fortune
+module Tui = Tui.Make (Tui.Color_unicode)
 
 let () =
   let deck = Deck.(shuffle default) in
