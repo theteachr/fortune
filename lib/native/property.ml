@@ -1,10 +1,11 @@
 type simple = Color.t
 type dual = Dual.t
+type wild = unit
 
 type card =
   | Simple of simple
   | Dual of dual
-  | Wild
+  | Wild of wild
 
 type t =
   | Simple of Color.t
@@ -19,4 +20,5 @@ let color (card : t) =
 
 let use_simple color = Simple color
 let use_dual colors choice = Dual (colors, choice)
-let use_wild color = Wild color
+let use_wild _ color = Wild color
+let wild : card = Wild ()
