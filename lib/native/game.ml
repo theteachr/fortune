@@ -41,13 +41,38 @@ let set_current_player player game =
 
 let is_not_over _ = true
 
+(* --- play functions --- *)
+let ( let* ) = Result.bind
+
+let play_property ?color (card : Property.card) player game =
+  let* property =
+    match card with
+    | Property.Simple color -> Ok (Property.use_simple color)
+    | Property.Dual dual ->
+        let* color = Option.to_result ~none:`Missing_color color in
+        let* choice =
+          match dual with
+          | l, _ when l = color -> Ok Dual.L
+          | _, r when r = color -> Ok Dual.R
+          | _ -> Error `Invalid_color
+        in
+        Ok (Property.use_dual dual choice)
+    | Property.Wild w ->
+        color
+        |> Option.to_result ~none:`Missing_color
+        |> Result.map (fun c -> Property.use_wild w c)
+  in
+  let player = Player.add_property property player in
+  Ok (set_current_player player game)
+
+let play_money value player game =
+  let player = Player.add_money (Money.M value) player in
+  Ok (set_current_player player game)
+
 let play n game =
   let card, player = Player.use_card n (current_player game) in
   match card with
-  | Card.Property (Simple color) ->
-      let property = Property.use_simple color in
-      let player = Player.add_property property player in
-      Ok (set_current_player player game)
+  | Card.Property card -> play_property card player game
   | Card.Money value ->
       let player = Player.add_money (M value) player in
       Ok (set_current_player player game)
@@ -55,36 +80,17 @@ let play n game =
 
 let play_as_money n game =
   let card, player = Player.use_card n (current_player game) in
-  match card with
-  | Card.Money value ->
-      let player = Player.add_money (M value) player in
-      Ok (set_current_player player game)
-  | Card.Action action ->
-      let player = Player.add_money (Action action) player in
-      Ok (set_current_player player game)
-  | _ -> Error `Not_monetizable
+  let* money =
+    match card with
+    | Card.Money value -> Ok (Money.M value)
+    | Card.Action action -> Ok (Action action)
+    | _ -> Error `Not_monetizable
+  in
+  let player = Player.add_money money player in
+  Ok (set_current_player player game)
 
 let play_as_color n color game =
   let card, player = Player.use_card n (current_player game) in
   match card with
-  | Card.Property (Simple c) when c = color ->
-      let property = Property.use_simple color in
-      let player = Player.add_property property player in
-      Ok (set_current_player player game)
-  | Card.Property (Dual dual) ->
-      let choice =
-        match dual with
-        | l, _ when l = color -> Ok Dual.L
-        | _, r when r = color -> Ok Dual.R
-        | _ -> Error `Invalid_color
-      in
-      choice
-      |> Result.map (fun choice ->
-             let property = Property.use_dual dual choice in
-             let player = Player.add_property property player in
-             set_current_player player game)
-  | Card.Property (Wild w) ->
-      let property = Property.use_wild w color in
-      let player = Player.add_property property player in
-      Ok (set_current_player player game)
-  | _ -> Error `Invalid_color
+  | Card.Property card -> play_property ~color card player game
+  | _ -> Error `Not_a_property

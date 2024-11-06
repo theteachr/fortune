@@ -29,6 +29,8 @@ let parse line =
 let message = function
   | `Not_monetizable -> "You can't play that card as money."
   | `Invalid_color -> "You can't play that card with that color."
+  | `Missing_color -> "You need to specify a color to play that card."
+  | `Not_a_property -> "You can't play that card as a property."
 
 let exec Ui.{ game; _ } (n, play) =
   let next =
