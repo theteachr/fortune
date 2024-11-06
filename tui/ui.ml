@@ -1,3 +1,8 @@
+type t = {
+  game: Fortune.Game.t;
+  error_message: string option;
+}
+
 module Color_unicode = struct
   let rgb = function
     | Fortune.Color.Black -> (0, 0, 0)
@@ -34,14 +39,15 @@ module Make (Color : sig
   val show : Fortune.Color.t -> string
 end) =
 struct
+  type nonrec t = t
+
+  let init game = { game; error_message = None }
+
   let read_input () =
     print_string "> ";
     match read_line () with
     | "q" -> None
     | line -> Some line
-
-  let parse_input = Command.parse
-  let update = Command.exec
 
   let show_indexed show items =
     items
@@ -131,19 +137,22 @@ Properties -
         (show_properties properties)
   end
 
-  let show game =
+  let show { game; error_message } =
     Printf.sprintf {|%s
 
 %d card(s) left in the deck.
+
+[%s]
 |}
       (game |> Fortune.Game.current_player |> Player.show)
       (Fortune.Deck.count game.draw_pile)
+      (error_message |> Option.value ~default:"")
 
   let clear_screen () = Sys.command "clear" |> ignore
 
-  let render ?(padding = 4) game =
+  let render ?(padding = 4) ui =
     clear_screen ();
-    game
+    ui
     |> show
     |> String.split_on_char '\n'
     |> List.map (( ^ ) @@ String.make padding ' ')

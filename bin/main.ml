@@ -1,5 +1,5 @@
 open Fortune
-module Tui = Tui.Make (Tui.Color_unicode)
+module Ui = Tui.Ui.Make (Tui.Ui.Color_unicode)
 
 let () =
   let deck = Deck.(shuffle default) in
@@ -7,10 +7,11 @@ let () =
     [ "ocaml"; "reason"; "melange"; "dune" ]
     |> List.map Player.make
     |> Game.start deck
+    |> Ui.init
   in
-  Tui.read_input
+  Ui.read_input
   |> Seq.of_dispenser
-  |> Seq.filter_map Tui.parse_input
-  |> Seq.scan Tui.update game
-  |> Seq.take_while Game.is_not_over
-  |> Seq.iter Tui.render
+  |> Seq.filter_map Tui.Command.parse
+  |> Seq.scan Tui.Command.exec game
+  |> Seq.take_while (fun Tui.Ui.{ game; _ } -> Game.is_not_over game)
+  |> Seq.iter Ui.render
