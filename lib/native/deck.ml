@@ -80,3 +80,5 @@ let take n deck =
     | card :: rest -> take' (n - 1) (card :: cards) rest
   in
   take' n [] deck
+
+let add card deck = card :: deck

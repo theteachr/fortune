@@ -70,7 +70,7 @@ struct
     let show : t -> string = function
       | Simple color -> Color.show color
       | Dual (colors, choice) -> show_dual (colors, choice)
-      | Wild color -> Printf.sprintf "WILD %s" (Color.show color)
+      | Wild color -> Printf.sprintf "%s [WILD]" (Color.show color)
   end
 
   module Action = struct

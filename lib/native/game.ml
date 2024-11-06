@@ -63,3 +63,28 @@ let play_money n game =
       let player = Player.add_money (Action action) player in
       Ok (set_current_player player game)
   | _ -> Error `Not_monetizable
+
+let play_as_color n color game =
+  let card, player = Player.use_card n (current_player game) in
+  match card with
+  | Card.Property (Simple c) when c = color ->
+      let property = Property.use_simple color in
+      let player = Player.add_property property player in
+      Ok (set_current_player player game)
+  | Card.Property (Dual dual) ->
+      let choice =
+        match dual with
+        | l, _ when l = color -> Ok Dual.L
+        | _, r when r = color -> Ok Dual.R
+        | _ -> Error `Invalid_color
+      in
+      choice
+      |> Result.map (fun choice ->
+             let property = Property.use_dual dual choice in
+             let player = Player.add_property property player in
+             set_current_player player game)
+  | Card.Property (Wild w) ->
+      let property = Property.use_wild w color in
+      let player = Player.add_property property player in
+      Ok (set_current_player player game)
+  | _ -> Error `Invalid_color
