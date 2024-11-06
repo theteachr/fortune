@@ -1,11 +1,27 @@
-type t = Play of int
+type play =
+  | Self
+  | AsMoney
+  | WithColor of string
 
-let play n = Play n
+type t = Play of int * play
+
+let ( let* ) = Option.bind
 
 let parse line =
   line |> String.split_on_char ' ' |> function
-  | [ "p"; n ] -> n |> int_of_string_opt |> Option.map play
+  | "p" :: n :: extra ->
+      let* index = int_of_string_opt n in
+      let play =
+        match extra with
+        | [] -> Self
+        | [ "m" ] -> AsMoney
+        | [ color ] -> WithColor color
+        | _ -> failwith "todo"
+      in
+      Play (index, play) |> Option.some
   | _ -> None
 
 let exec game = function
-  | Play n -> Fortune.Game.play_card n game
+  | Play (n, Self) -> Fortune.Game.play_card n game
+  | Play (n, AsMoney) -> Fortune.Game.play_money n game
+  | _ -> game

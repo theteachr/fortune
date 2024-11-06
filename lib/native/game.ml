@@ -52,3 +52,14 @@ let play_card n game =
       let player = Player.add_money (M value) player in
       set_current_player player game
   | _ -> game
+
+let play_money n game =
+  let card, player = Player.use_card n (current_player game) in
+  match card with
+  | Card.Money value ->
+      let player = Player.add_money (M value) player in
+      set_current_player player game
+  | Card.Action action ->
+      let player = Player.add_money (Action action) player in
+      set_current_player player game
+  | _ -> game

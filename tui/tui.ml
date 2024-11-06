@@ -91,7 +91,10 @@ struct
 
     let show = function
       | M value -> Printf.sprintf "M%d" value
-      | Action action -> Printf.sprintf "%s" (Action.show action)
+      | Action action ->
+          Printf.sprintf "M%d (%s)"
+            (Fortune.Action.value action)
+            (Action.show action)
   end
 
   module Card = struct

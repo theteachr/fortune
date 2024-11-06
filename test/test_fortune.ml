@@ -149,3 +149,50 @@ let%expect_test "playing a money card should work" =
 
     86 card(s) left in the deck.
     |}]
+
+let%expect_test "playing an action card as money should work" =
+  let game = game shuffled_deck in
+  render game;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. SKYBLUE BROWN
+    1. M4
+    2. RENT: BROWN SKYBLUE
+    3. PASS GO
+    4. JUST SAY NO
+
+    Bank -
+
+
+
+    Properties -
+
+
+
+    86 card(s) left in the deck. |}];
+  Game.(game |> play_money 4 |> play_money 3) |> render;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. SKYBLUE BROWN
+    1. M4
+    2. RENT: BROWN SKYBLUE
+
+    Bank -
+
+    0. M1 (PASS GO)
+    1. M4 (JUST SAY NO)
+
+    Properties -
+
+
+
+    86 card(s) left in the deck.
+    |}]
