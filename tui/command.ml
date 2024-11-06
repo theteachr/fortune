@@ -33,8 +33,8 @@ let message = function
 let exec Ui.{ game; _ } (n, play) =
   let next =
     match play with
-    | Self -> Fortune.Game.play_card n game
-    | AsMoney -> Fortune.Game.play_money n game
+    | Self -> Fortune.Game.play n game
+    | AsMoney -> Fortune.Game.play_as_money n game
     | WithColor c -> Fortune.Game.play_as_color n c game
   in
   match next with

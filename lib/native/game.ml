@@ -41,7 +41,7 @@ let set_current_player player game =
 
 let is_not_over _ = true
 
-let play_card n game =
+let play n game =
   let card, player = Player.use_card n (current_player game) in
   match card with
   | Card.Property (Simple color) ->
@@ -53,7 +53,7 @@ let play_card n game =
       Ok (set_current_player player game)
   | _ -> Ok game
 
-let play_money n game =
+let play_as_money n game =
   let card, player = Player.use_card n (current_player game) in
   match card with
   | Card.Money value ->
