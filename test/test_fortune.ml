@@ -176,3 +176,31 @@ let%expect_test "display error on trying to play property card as money" =
 
     [You can't play that card as money.]
     |}]
+
+let%expect_test "play wild property" =
+  default_game |> exec (Play (0, WithColor "sky")) |> render;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. M4
+    1. RENT: BROWN SKYBLUE
+    2. PASS GO
+    3. JUST SAY NO
+
+    Bank -
+
+
+
+    Properties -
+
+    0. [SKYBLUE] BROWN
+
+
+
+    86 card(s) left in the deck.
+
+    []
+    |}]
