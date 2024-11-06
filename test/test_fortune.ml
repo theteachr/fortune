@@ -78,7 +78,7 @@ let%expect_test "play simple property cards" =
     []
     |}];
   (* Game.(game |> play_card 0 >>= play_card 2) |> Result.iter ~f:render;*)
-  game |> exec (Play (0, Self)) |> exec (Play (2, Self)) |> render;
+  game |> exec (0, Self) |> exec (2, Self) |> render;
   [%expect
     {|
     ocaml
@@ -104,7 +104,7 @@ let%expect_test "play simple property cards" =
     |}]
 
 let%expect_test "play a money card" =
-  default_game |> exec (Play (1, Self)) |> render;
+  default_game |> exec (1, Self) |> render;
   [%expect
     {|
     ocaml
@@ -130,7 +130,7 @@ let%expect_test "play a money card" =
     |}]
 
 let%expect_test "play an action card as money" =
-  default_game |> exec (Play (4, AsMoney)) |> exec (Play (3, AsMoney)) |> render;
+  default_game |> exec (4, AsMoney) |> exec (3, AsMoney) |> render;
   [%expect
     {|
     ocaml
@@ -156,7 +156,7 @@ let%expect_test "play an action card as money" =
     |}]
 
 let%expect_test "display error on trying to play property card as money" =
-  default_game |> exec (Play (0, AsMoney)) |> render;
+  default_game |> exec (0, AsMoney) |> render;
   [%expect
     {|
     ocaml
@@ -183,7 +183,7 @@ let%expect_test "display error on trying to play property card as money" =
     |}]
 
 let%expect_test "play wild property - first color" =
-  default_game |> exec (Play (0, WithColor SkyBlue)) |> render;
+  default_game |> exec (0, WithColor SkyBlue) |> render;
   [%expect
     {|
     ocaml
@@ -209,7 +209,7 @@ let%expect_test "play wild property - first color" =
     |}]
 
 let%expect_test "play wild property - second color" =
-  default_game |> exec (Play (0, WithColor Brown)) |> render;
+  default_game |> exec (0, WithColor Brown) |> render;
   [%expect
     {|
     ocaml
@@ -235,7 +235,7 @@ let%expect_test "play wild property - second color" =
     |}]
 
 let%expect_test "play wild property with a wrong color" =
-  default_game |> exec (Play (0, WithColor Black)) |> render;
+  default_game |> exec (0, WithColor Black) |> render;
   [%expect
     {|
     ocaml
@@ -288,7 +288,7 @@ let%expect_test "play very wild card" =
 
     []
     |}];
-  game |> exec (Play (0, WithColor Black)) |> render;
+  game |> exec (0, WithColor Black) |> render;
   [%expect
     {|
     ocaml
