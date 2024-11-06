@@ -18,9 +18,9 @@ let parse line =
   let* index = int_of_string_opt n in
   let* command =
     match rest with
-    | [ "p" ] -> Some Self
-    | [ "pm" ] -> Some AsMoney
-    | [ "pc"; color ] ->
+    | [ "p" ] | [] -> Some Self
+    | [ "m" ] -> Some AsMoney
+    | [ "c"; color ] ->
         color |> Fortune.Color.of_string |> Option.map (fun c -> WithColor c)
     | _ -> None
   in
