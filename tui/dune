@@ -1,3 +1,4 @@
 (library
  (name tui)
- (libraries fortune))
+ (libraries fortune)
+ (modules command ui))

@@ -47,19 +47,19 @@ let play_card n game =
   | Card.Property (Simple color) ->
       let property = Property.use_simple color in
       let player = Player.add_property property player in
-      set_current_player player game
+      Ok (set_current_player player game)
   | Card.Money value ->
       let player = Player.add_money (M value) player in
-      set_current_player player game
-  | _ -> game
+      Ok (set_current_player player game)
+  | _ -> Ok game
 
 let play_money n game =
   let card, player = Player.use_card n (current_player game) in
   match card with
   | Card.Money value ->
       let player = Player.add_money (M value) player in
-      set_current_player player game
+      Ok (set_current_player player game)
   | Card.Action action ->
       let player = Player.add_money (Action action) player in
-      set_current_player player game
-  | _ -> game
+      Ok (set_current_player player game)
+  | _ -> Error `Not_monetizable
