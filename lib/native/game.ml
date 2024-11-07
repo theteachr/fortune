@@ -19,6 +19,7 @@ type t = {
   draw_pile: Deck.t;
   play_pile: Card.t list;
   players: Player.t Round.t;
+  played_cards: Card.Used.t list;
 }
 
 let start deck players =
@@ -32,53 +33,41 @@ let start deck players =
     List.fold_left distribute (deck, []) players
   in
   let players = players |> List.rev |> Round.of_list in
-  { draw_pile; players; play_pile = [] }
+  { draw_pile; players; play_pile = []; played_cards = [] }
 
 let current_player { players; _ } = Round.current players
 
 let set_current_player player game =
   { game with players = Round.set_current player game.players }
 
+let add_played_card card game =
+  { game with played_cards = card :: game.played_cards }
+
 let is_not_over _ = true
 
 (* --- play functions --- *)
 let ( let* ) = Result.bind
 
-let play_property ?color (card : Property.card) player game =
-  let* property =
-    match card with
-    | Property.Simple color -> Ok (Property.use_simple color)
-    | Property.Dual dual ->
-        let* color = Option.to_result ~none:`Missing_color color in
-        let* choice =
-          match dual with
-          | l, _ when l = color -> Ok Dual.L
-          | _, r when r = color -> Ok Dual.R
-          | _ -> Error `Invalid_color
-        in
-        Ok (Property.use_dual dual choice)
-    | Property.Wild w ->
-        color
-        |> Option.to_result ~none:`Missing_color
-        |> Result.map (fun c -> Property.use_wild w c)
-  in
-  let player = Player.add_property property player in
-  Ok (set_current_player player game)
-
-let play_money value player game =
-  let player = Player.add_money (Money.M value) player in
-  Ok (set_current_player player game)
+let player_moves_over game =
+  if List.length game.played_cards = 3 then Error `Moves_over else Ok game
 
 let play n game =
+  let* game = player_moves_over game in
   let card, player = Player.use_card n (current_player game) in
-  match card with
-  | Card.Property card -> play_property card player game
-  | Card.Money value ->
-      let player = Player.add_money (M value) player in
-      Ok (set_current_player player game)
-  | _ -> Ok game
+  let* card, player, game =
+    match card with
+    | Card.Property card ->
+        let* card = Property.use card in
+        Ok (Card.Used.Property card, Player.add_property card player, game)
+    | Card.Money value ->
+        let card = Money.M value in
+        Ok (Money card, Player.add_money card player, game)
+    | _ -> failwith "TODO"
+  in
+  game |> set_current_player player |> add_played_card card |> Result.ok
 
 let play_as_money n game =
+  let* game = player_moves_over game in
   let card, player = Player.use_card n (current_player game) in
   let* money =
     match card with
@@ -86,11 +75,20 @@ let play_as_money n game =
     | Card.Action action -> Ok (Action action)
     | _ -> Error `Not_monetizable
   in
-  let player = Player.add_money money player in
-  Ok (set_current_player player game)
+  game
+  |> set_current_player (Player.add_money money player)
+  |> add_played_card (Money money)
+  |> Result.ok
 
 let play_as_color n color game =
+  let* game = player_moves_over game in
   let card, player = Player.use_card n (current_player game) in
-  match card with
-  | Card.Property card -> play_property ~color card player game
-  | _ -> Error `Not_a_property
+  let* property =
+    match card with
+    | Card.Property card -> Property.use ~color card
+    | _ -> Error `Not_a_property
+  in
+  game
+  |> set_current_player (Player.add_property property player)
+  |> add_played_card (Property property)
+  |> Result.ok

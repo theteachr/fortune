@@ -15,7 +15,7 @@ type t =
   | Wild of Color.t
 
 val color : t -> Color.t
-val use_simple : simple -> t
-val use_dual : Dual.t -> Dual.choice -> t
-val use_wild : wild -> Color.t -> t
 val wild : card
+
+val use :
+  ?color:Color.t -> card -> (t, [> `Invalid_color | `Missing_color ]) result
