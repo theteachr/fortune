@@ -31,11 +31,13 @@ let%expect_test "default game" =
 
     Hand -
 
-    0. SKYBLUE BROWN
-    1. M4
-    2. RENT: BROWN SKYBLUE
-    3. PASS GO
-    4. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. SKYBLUE BROWN
+    3. M4
+    4. RENT: BROWN SKYBLUE
+    5. PASS GO
+    6. JUST SAY NO
 
     Bank -
 
@@ -49,7 +51,7 @@ let%expect_test "default game" =
 
 
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
@@ -63,7 +65,38 @@ let%expect_test "play simple property cards" =
 
     Hand -
 
-    0. BLUE
+    0. RED
+    1. RED
+    2. BLUE
+    3. BLUE
+    4. BROWN
+    5. BROWN
+    6. GREEN
+
+    Bank -
+
+
+
+    Properties -
+
+
+
+    This turn -
+
+
+
+    84 card(s) left in the deck.
+
+    []
+    |}];
+  game |> exec_play (0, Self) |> exec_play (2, Self) |> render;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. RED
     1. BLUE
     2. BROWN
     3. BROWN
@@ -75,18 +108,21 @@ let%expect_test "play simple property cards" =
 
     Properties -
 
-
+    0. BLUE
+    1. RED
 
     This turn -
 
+    BLUE
+    RED
 
-
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
-    |}];
-  (* Game.(game |> play_card 0 >>= play_card 2) |> Result.iter ~f:render;*)
-  game |> exec_play (0, Self) |> exec_play (2, Self) |> render;
+    |}]
+
+let%expect_test "play a money card" =
+  default_game |> exec_play (3, Self) |> render;
   [%expect
     {|
     ocaml
@@ -94,40 +130,11 @@ let%expect_test "play simple property cards" =
     Hand -
 
     0. BLUE
-    1. BROWN
-    2. GREEN
-
-    Bank -
-
-
-
-    Properties -
-
-    0. BROWN
-    1. BLUE
-
-    This turn -
-
-    BROWN
-    BLUE
-
-    86 card(s) left in the deck.
-
-    []
-    |}]
-
-let%expect_test "play a money card" =
-  default_game |> exec_play (1, Self) |> render;
-  [%expect
-    {|
-    ocaml
-
-    Hand -
-
-    0. SKYBLUE BROWN
-    1. RENT: BROWN SKYBLUE
-    2. PASS GO
-    3. JUST SAY NO
+    1. PASS GO
+    2. SKYBLUE BROWN
+    3. RENT: BROWN SKYBLUE
+    4. PASS GO
+    5. JUST SAY NO
 
     Bank -
 
@@ -141,22 +148,24 @@ let%expect_test "play a money card" =
 
     M4
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
 
 let%expect_test "play action cards as money" =
-  default_game |> exec_play (4, AsMoney) |> exec_play (3, AsMoney) |> render;
+  default_game |> exec_play (6, AsMoney) |> exec_play (5, AsMoney) |> render;
   [%expect
     {|
     ocaml
 
     Hand -
 
-    0. SKYBLUE BROWN
-    1. M4
-    2. RENT: BROWN SKYBLUE
+    0. BLUE
+    1. PASS GO
+    2. SKYBLUE BROWN
+    3. M4
+    4. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -172,7 +181,7 @@ let%expect_test "play action cards as money" =
     M1 (PASS GO)
     M4 (JUST SAY NO)
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
@@ -185,11 +194,13 @@ let%expect_test "display error on trying to play property card as money" =
 
     Hand -
 
-    0. SKYBLUE BROWN
-    1. M4
-    2. RENT: BROWN SKYBLUE
-    3. PASS GO
-    4. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. SKYBLUE BROWN
+    3. M4
+    4. RENT: BROWN SKYBLUE
+    5. PASS GO
+    6. JUST SAY NO
 
     Bank -
 
@@ -203,23 +214,25 @@ let%expect_test "display error on trying to play property card as money" =
 
 
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     [You can't play that card as money.]
     |}]
 
 let%expect_test "play wild property - first color" =
-  default_game |> exec_play (0, WithColor SkyBlue) |> render;
+  default_game |> exec_play (2, WithColor SkyBlue) |> render;
   [%expect
     {|
     ocaml
 
     Hand -
 
-    0. M4
-    1. RENT: BROWN SKYBLUE
-    2. PASS GO
-    3. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. M4
+    3. RENT: BROWN SKYBLUE
+    4. PASS GO
+    5. JUST SAY NO
 
     Bank -
 
@@ -233,23 +246,25 @@ let%expect_test "play wild property - first color" =
 
     [SKYBLUE] BROWN
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
 
 let%expect_test "play wild property - second color" =
-  default_game |> exec_play (0, WithColor Brown) |> render;
+  default_game |> exec_play (2, WithColor Brown) |> render;
   [%expect
     {|
     ocaml
 
     Hand -
 
-    0. M4
-    1. RENT: BROWN SKYBLUE
-    2. PASS GO
-    3. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. M4
+    3. RENT: BROWN SKYBLUE
+    4. PASS GO
+    5. JUST SAY NO
 
     Bank -
 
@@ -263,24 +278,26 @@ let%expect_test "play wild property - second color" =
 
     SKYBLUE [BROWN]
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
 
 let%expect_test "play wild property with a wrong color" =
-  default_game |> exec_play (0, WithColor Black) |> render;
+  default_game |> exec_play (2, WithColor Black) |> render;
   [%expect
     {|
     ocaml
 
     Hand -
 
-    0. SKYBLUE BROWN
-    1. M4
-    2. RENT: BROWN SKYBLUE
-    3. PASS GO
-    4. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. SKYBLUE BROWN
+    3. M4
+    4. RENT: BROWN SKYBLUE
+    5. PASS GO
+    6. JUST SAY NO
 
     Bank -
 
@@ -294,7 +311,7 @@ let%expect_test "play wild property with a wrong color" =
 
 
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     [You can't play that card with that color.]
     |}]
@@ -308,11 +325,13 @@ let%expect_test "play very wild card" =
 
     Hand -
 
-    0. WILD PROPERTY
-    1. M4
-    2. RENT: BROWN SKYBLUE
-    3. PASS GO
-    4. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. WILD PROPERTY
+    3. M4
+    4. RENT: BROWN SKYBLUE
+    5. PASS GO
+    6. JUST SAY NO
 
     Bank -
 
@@ -326,21 +345,23 @@ let%expect_test "play very wild card" =
 
 
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}];
-  game |> exec_play (0, WithColor Black) |> render;
+  game |> exec_play (2, WithColor Black) |> render;
   [%expect
     {|
     ocaml
 
     Hand -
 
-    0. M4
-    1. RENT: BROWN SKYBLUE
-    2. PASS GO
-    3. JUST SAY NO
+    0. BLUE
+    1. PASS GO
+    2. M4
+    3. RENT: BROWN SKYBLUE
+    4. PASS GO
+    5. JUST SAY NO
 
     Bank -
 
@@ -354,17 +375,17 @@ let%expect_test "play very wild card" =
 
     BLACK [WILD]
 
-    86 card(s) left in the deck.
+    84 card(s) left in the deck.
 
     []
     |}]
 
 let%expect_test "disallow playing more than 3 cards" =
   default_game
-  |> exec_play (0, WithColor SkyBlue)
-  |> exec_play (0, Self)
-  |> exec_play (1, AsMoney)
-  |> exec_play (1, AsMoney)
+  |> exec_play (2, WithColor SkyBlue)
+  |> exec_play (2, Self)
+  |> exec_play (3, AsMoney)
+  |> exec_play (3, AsMoney)
   |> render;
   [%expect
     {|
@@ -372,8 +393,10 @@ let%expect_test "disallow playing more than 3 cards" =
 
       Hand -
 
-      0. RENT: BROWN SKYBLUE
-      1. JUST SAY NO
+      0. BLUE
+      1. PASS GO
+      2. RENT: BROWN SKYBLUE
+      3. JUST SAY NO
 
       Bank -
 
@@ -390,7 +413,7 @@ let%expect_test "disallow playing more than 3 cards" =
       M4
       [SKYBLUE] BROWN
 
-      86 card(s) left in the deck.
+      84 card(s) left in the deck.
 
       [You can't play more than 3 cards in a round.]
       |}]

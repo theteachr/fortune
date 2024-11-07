@@ -22,6 +22,21 @@ type t = {
   played_cards: Card.Used.t list;
 }
 
+let current_player { players; _ } = Round.current players
+
+let set_current_player player game =
+  { game with players = Round.set_current player game.players }
+
+let add_played_card card game =
+  { game with played_cards = card :: game.played_cards }
+
+let is_not_over _ = true
+
+let draw_two game =
+  let cards, draw_pile = Deck.take 2 game.draw_pile in
+  let player = List.fold_left Player.take (current_player game) cards in
+  { (set_current_player player game) with draw_pile }
+
 let start deck players =
   (* Distribute 5 cards per player from the deck *)
   let draw_pile, players =
@@ -33,22 +48,11 @@ let start deck players =
     List.fold_left distribute (deck, []) players
   in
   let players = players |> List.rev |> Round.of_list in
-  { draw_pile; players; play_pile = []; played_cards = [] }
-
-let current_player { players; _ } = Round.current players
-
-let set_current_player player game =
-  { game with players = Round.set_current player game.players }
-
-let add_played_card card game =
-  { game with played_cards = card :: game.played_cards }
-
-let is_not_over _ = true
+  draw_two { draw_pile; players; play_pile = []; played_cards = [] }
 
 let next_round game =
   (* TODO: Ask the current player to discard if they have > 7 *)
-  (* TODO: Add two cards to the player's hand *)
-  { game with players = Round.step game.players (* TODO: Reset played cards *) }
+  draw_two { game with players = Round.step game.players; played_cards = [] }
 
 (* --- play functions --- *)
 let ( let* ) = Result.bind
