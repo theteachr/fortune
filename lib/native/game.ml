@@ -33,6 +33,7 @@ let add_played_card card game =
 let is_not_over _ = true
 
 let draw_two game =
+  (* TODO: Handle the case where the deck does not have enough cards *)
   let cards, draw_pile = Deck.take 2 game.draw_pile in
   let player = List.fold_left Player.take (current_player game) cards in
   { (set_current_player player game) with draw_pile }
@@ -63,17 +64,21 @@ let player_moves_over game =
 let play n game =
   let* game = player_moves_over game in
   let card, player = Player.use_card n (current_player game) in
-  let* card, player, game =
-    match card with
-    | Card.Property card ->
-        let* card = Property.use card in
-        Ok (Card.Used.Property card, Player.add_property card player, game)
-    | Card.Money value ->
-        let card = Money.M value in
-        Ok (Money card, Player.add_money card player, game)
-    | _ -> failwith "TODO"
-  in
-  game |> set_current_player player |> add_played_card card |> Result.ok
+  match card with
+  | Card.Property card ->
+      let* card = Property.use card in
+      game
+      |> set_current_player (Player.add_property card player)
+      |> add_played_card (Property card)
+      |> Result.ok
+  | Card.Money value ->
+      let card = Money.M value in
+      game
+      |> set_current_player (Player.add_money card player)
+      |> add_played_card (Money card)
+      |> Result.ok
+  | Card.Action PassGo -> Ok (draw_two game)
+  | _ -> failwith "TODO"
 
 let play_as_money n game =
   let* game = player_moves_over game in

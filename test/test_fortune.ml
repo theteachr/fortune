@@ -417,3 +417,38 @@ let%expect_test "disallow playing more than 3 cards" =
 
       [You can't play more than 3 cards in a round.]
       |}]
+
+let%expect_test "play pass go" =
+  default_game |> exec_play (1, Self) |> render;
+  [%expect
+    {|
+    ocaml
+
+    Hand -
+
+    0. GREEN
+    1. WILD PROPERTY
+    2. BLUE
+    3. PASS GO
+    4. SKYBLUE BROWN
+    5. M4
+    6. RENT: BROWN SKYBLUE
+    7. PASS GO
+    8. JUST SAY NO
+
+    Bank -
+
+
+
+    Properties -
+
+
+
+    This turn -
+
+
+
+    82 card(s) left in the deck.
+
+    []
+    |}]
