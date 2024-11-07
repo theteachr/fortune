@@ -359,14 +359,15 @@ let%expect_test "play very wild card" =
     []
     |}]
 
-  let%expect_test "disallow playing more than 3 cards" =
-    default_game
-    |> exec (0, WithColor SkyBlue)
-    |> exec (0, Self)
-    |> exec (1, AsMoney)
-    |> exec (1, AsMoney)
-    |> render;
-    [%expect {|
+let%expect_test "disallow playing more than 3 cards" =
+  default_game
+  |> exec (0, WithColor SkyBlue)
+  |> exec (0, Self)
+  |> exec (1, AsMoney)
+  |> exec (1, AsMoney)
+  |> render;
+  [%expect
+    {|
       ocaml
 
       Hand -
