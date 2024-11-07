@@ -12,7 +12,7 @@ let add_property property player =
   { player with properties = property :: player.properties }
 
 let add_money money player = { player with bank = money :: player.bank }
-let get n { hand; _ } = List.nth hand n
+let get n { hand; _ } = List.nth_opt hand n
 
 let remove_from_hand n player =
   let hand =
@@ -23,5 +23,4 @@ let remove_from_hand n player =
   { player with hand }
 
 let use_card n player =
-  let card = get n player in
-  (card, remove_from_hand n player)
+  player |> get n |> Option.map (fun card -> (card, remove_from_hand n player))

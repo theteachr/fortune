@@ -33,6 +33,7 @@ let message = function
   | `Missing_color -> "You need to specify a color to play that card."
   | `Not_a_property -> "You can't play that card as a property."
   | `Moves_over -> "You can't play more than 3 cards in a round."
+  | `Invalid_index max_index -> Printf.sprintf "Please enter a number in range [0, %d]." max_index
 
 let exec Ui.{ game; _ } command =
   let next =

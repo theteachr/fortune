@@ -452,3 +452,36 @@ let%expect_test "play pass go" =
 
     []
     |}]
+
+let%expect_test "invalid index" =
+  default_game |> exec_play (10, Self) |> render;
+  [%expect
+    {|
+      ocaml
+
+      Hand -
+
+      0. BLUE
+      1. PASS GO
+      2. SKYBLUE BROWN
+      3. M4
+      4. RENT: BROWN SKYBLUE
+      5. PASS GO
+      6. JUST SAY NO
+
+      Bank -
+
+
+
+      Properties -
+
+
+
+      This turn -
+
+
+
+      84 card(s) left in the deck.
+
+      [Please enter a number in range [0, 6].]
+      |}]

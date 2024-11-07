@@ -55,6 +55,12 @@ let next_round game =
   (* TODO: Ask the current player to discard if they have > 7 *)
   draw_two { game with players = Round.step game.players; played_cards = [] }
 
+let use_player_card n game =
+  let player = current_player game in
+  player
+  |> Player.use_card n
+  |> Option.to_result ~none:(`Invalid_index (List.length player.hand - 1))
+
 (* --- play functions --- *)
 let ( let* ) = Result.bind
 
@@ -63,7 +69,7 @@ let player_moves_over game =
 
 let play n game =
   let* game = player_moves_over game in
-  let card, player = Player.use_card n (current_player game) in
+  let* card, player = use_player_card n game in
   match card with
   | Card.Property card ->
       let* card = Property.use card in
@@ -82,7 +88,7 @@ let play n game =
 
 let play_as_money n game =
   let* game = player_moves_over game in
-  let card, player = Player.use_card n (current_player game) in
+  let* card, player = use_player_card n game in
   let* money =
     match card with
     | Card.Money value -> Ok (Money.M value)
@@ -96,7 +102,7 @@ let play_as_money n game =
 
 let play_as_color n color game =
   let* game = player_moves_over game in
-  let card, player = Player.use_card n (current_player game) in
+  let* card, player = use_player_card n game in
   let* property =
     match card with
     | Card.Property card -> Property.use ~color card
