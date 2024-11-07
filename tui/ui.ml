@@ -137,14 +137,27 @@ Properties -
         (show_properties properties)
   end
 
+  let show_used cards =
+    cards
+    |> List.map (function
+         | Fortune.Card.Used.Property p -> Property.show p
+         | Action a -> Action.show a
+         | Money m -> Money.show m)
+    |> String.concat "\n"
+
   let show { game; error_message } =
     Printf.sprintf {|%s
+
+This turn -
+
+%s
 
 %d card(s) left in the deck.
 
 [%s]
 |}
       (game |> Fortune.Game.current_player |> Player.show)
+      (show_used game.played_cards)
       (Fortune.Deck.count game.draw_pile)
       (error_message |> Option.value ~default:"")
 

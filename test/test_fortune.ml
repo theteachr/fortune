@@ -45,6 +45,10 @@ let%expect_test "default game" =
 
 
 
+    This turn -
+
+
+
     86 card(s) left in the deck.
 
     []
@@ -73,6 +77,10 @@ let%expect_test "play simple property cards" =
 
 
 
+    This turn -
+
+
+
     86 card(s) left in the deck.
 
     []
@@ -97,6 +105,11 @@ let%expect_test "play simple property cards" =
 
     0. BROWN
     1. BLUE
+
+    This turn -
+
+    BROWN
+    BLUE
 
     86 card(s) left in the deck.
 
@@ -124,12 +137,16 @@ let%expect_test "play a money card" =
 
 
 
+    This turn -
+
+    M4
+
     86 card(s) left in the deck.
 
     []
     |}]
 
-let%expect_test "play an action card as money" =
+let%expect_test "play action cards as money" =
   default_game |> exec (4, AsMoney) |> exec (3, AsMoney) |> render;
   [%expect
     {|
@@ -149,6 +166,11 @@ let%expect_test "play an action card as money" =
     Properties -
 
 
+
+    This turn -
+
+    M1 (PASS GO)
+    M4 (JUST SAY NO)
 
     86 card(s) left in the deck.
 
@@ -174,6 +196,10 @@ let%expect_test "display error on trying to play property card as money" =
 
 
     Properties -
+
+
+
+    This turn -
 
 
 
@@ -203,6 +229,10 @@ let%expect_test "play wild property - first color" =
 
     0. [SKYBLUE] BROWN
 
+    This turn -
+
+    [SKYBLUE] BROWN
+
     86 card(s) left in the deck.
 
     []
@@ -229,6 +259,10 @@ let%expect_test "play wild property - second color" =
 
     0. SKYBLUE [BROWN]
 
+    This turn -
+
+    SKYBLUE [BROWN]
+
     86 card(s) left in the deck.
 
     []
@@ -253,6 +287,10 @@ let%expect_test "play wild property with a wrong color" =
 
 
     Properties -
+
+
+
+    This turn -
 
 
 
@@ -284,6 +322,10 @@ let%expect_test "play very wild card" =
 
 
 
+    This turn -
+
+
+
     86 card(s) left in the deck.
 
     []
@@ -308,7 +350,46 @@ let%expect_test "play very wild card" =
 
     0. BLACK [WILD]
 
+    This turn -
+
+    BLACK [WILD]
+
     86 card(s) left in the deck.
 
     []
     |}]
+
+  let%expect_test "disallow playing more than 3 cards" =
+    default_game
+    |> exec (0, WithColor SkyBlue)
+    |> exec (0, Self)
+    |> exec (1, AsMoney)
+    |> exec (1, AsMoney)
+    |> render;
+    [%expect {|
+      ocaml
+
+      Hand -
+
+      0. RENT: BROWN SKYBLUE
+      1. JUST SAY NO
+
+      Bank -
+
+      0. M1 (PASS GO)
+      1. M4
+
+      Properties -
+
+      0. [SKYBLUE] BROWN
+
+      This turn -
+
+      M1 (PASS GO)
+      M4
+      [SKYBLUE] BROWN
+
+      86 card(s) left in the deck.
+
+      [You can't play more than 3 cards in a round.]
+      |}]
