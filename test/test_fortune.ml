@@ -14,7 +14,7 @@ let game deck =
   |> Tui.init
 
 let render game = game |> Tui.show |> print_endline
-let exec = Fn.flip Tui_.Command.exec
+let exec_play (index, play) game = Tui_.Command.exec game (Play (index, play))
 let shuffled_deck = Deck.(shuffle ~seed:10 default)
 
 let deck_with_very_wild_card =
@@ -86,7 +86,7 @@ let%expect_test "play simple property cards" =
     []
     |}];
   (* Game.(game |> play_card 0 >>= play_card 2) |> Result.iter ~f:render;*)
-  game |> exec (0, Self) |> exec (2, Self) |> render;
+  game |> exec_play (0, Self) |> exec_play (2, Self) |> render;
   [%expect
     {|
     ocaml
@@ -117,7 +117,7 @@ let%expect_test "play simple property cards" =
     |}]
 
 let%expect_test "play a money card" =
-  default_game |> exec (1, Self) |> render;
+  default_game |> exec_play (1, Self) |> render;
   [%expect
     {|
     ocaml
@@ -147,7 +147,7 @@ let%expect_test "play a money card" =
     |}]
 
 let%expect_test "play action cards as money" =
-  default_game |> exec (4, AsMoney) |> exec (3, AsMoney) |> render;
+  default_game |> exec_play (4, AsMoney) |> exec_play (3, AsMoney) |> render;
   [%expect
     {|
     ocaml
@@ -178,7 +178,7 @@ let%expect_test "play action cards as money" =
     |}]
 
 let%expect_test "display error on trying to play property card as money" =
-  default_game |> exec (0, AsMoney) |> render;
+  default_game |> exec_play (0, AsMoney) |> render;
   [%expect
     {|
     ocaml
@@ -209,7 +209,7 @@ let%expect_test "display error on trying to play property card as money" =
     |}]
 
 let%expect_test "play wild property - first color" =
-  default_game |> exec (0, WithColor SkyBlue) |> render;
+  default_game |> exec_play (0, WithColor SkyBlue) |> render;
   [%expect
     {|
     ocaml
@@ -239,7 +239,7 @@ let%expect_test "play wild property - first color" =
     |}]
 
 let%expect_test "play wild property - second color" =
-  default_game |> exec (0, WithColor Brown) |> render;
+  default_game |> exec_play (0, WithColor Brown) |> render;
   [%expect
     {|
     ocaml
@@ -269,7 +269,7 @@ let%expect_test "play wild property - second color" =
     |}]
 
 let%expect_test "play wild property with a wrong color" =
-  default_game |> exec (0, WithColor Black) |> render;
+  default_game |> exec_play (0, WithColor Black) |> render;
   [%expect
     {|
     ocaml
@@ -330,7 +330,7 @@ let%expect_test "play very wild card" =
 
     []
     |}];
-  game |> exec (0, WithColor Black) |> render;
+  game |> exec_play (0, WithColor Black) |> render;
   [%expect
     {|
     ocaml
@@ -361,10 +361,10 @@ let%expect_test "play very wild card" =
 
 let%expect_test "disallow playing more than 3 cards" =
   default_game
-  |> exec (0, WithColor SkyBlue)
-  |> exec (0, Self)
-  |> exec (1, AsMoney)
-  |> exec (1, AsMoney)
+  |> exec_play (0, WithColor SkyBlue)
+  |> exec_play (0, Self)
+  |> exec_play (1, AsMoney)
+  |> exec_play (1, AsMoney)
   |> render;
   [%expect
     {|

@@ -45,6 +45,11 @@ let add_played_card card game =
 
 let is_not_over _ = true
 
+let next_round game =
+  (* TODO: Ask the current player to discard if they have > 7 *)
+  (* TODO: Add two cards to the player's hand *)
+  { game with players = Round.step game.players (* TODO: Reset played cards *) }
+
 (* --- play functions --- *)
 let ( let* ) = Result.bind
 
