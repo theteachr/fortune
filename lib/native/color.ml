@@ -12,13 +12,13 @@ type t =
 
 let of_string = function
   | "k" | "black" -> Some Black
-  | "blue" -> Some Blue
-  | "br" -> Some Brown
-  | "g" -> Some Green
-  | "mag" -> Some Magenta
-  | "o" -> Some Orange
-  | "r" -> Some Red
-  | "sky" -> Some SkyBlue
-  | "tur" -> Some Turquoise
-  | "y" -> Some Yellow
+  | "bl" | "blue" -> Some Blue
+  | "br" | "brown" -> Some Brown
+  | "g" | "green" -> Some Green
+  | "mag" | "magenta" | "pink" -> Some Magenta
+  | "o" | "orange" -> Some Orange
+  | "r" | "red" -> Some Red
+  | "sky" | "lbl" | "lblue" -> Some SkyBlue
+  | "tur" | "cyan" -> Some Turquoise
+  | "y" | "yellow" -> Some Yellow
   | _ -> None
