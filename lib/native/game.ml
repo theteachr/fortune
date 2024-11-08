@@ -83,7 +83,8 @@ let play n game =
       |> set_current_player (Player.add_money card player)
       |> add_played_card (Money card)
       |> Result.ok
-  | Card.Action PassGo -> Ok (draw_two game)
+  | Card.Action (PassGo as action) ->
+      game |> draw_two |> add_played_card (Action action) |> Result.ok
   | _ -> failwith "TODO"
 
 let play_as_money n game =

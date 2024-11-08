@@ -446,7 +446,7 @@ let%expect_test "play pass go" =
 
     This turn -
 
-
+    PASS GO
 
     82 card(s) left in the deck.
 
