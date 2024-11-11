@@ -36,12 +36,15 @@ let message = function
   | `Invalid_index max_index ->
       Printf.sprintf "Please enter a number in range [0, %d]." max_index
 
+let exec_play n game = function
+  | Self -> Fortune.Game.play n game
+  | AsMoney -> Fortune.Game.play_as_money n game
+  | WithColor c -> Fortune.Game.play_as_color n c game
+
 let exec Ui.{ game; _ } command =
   let next =
     match command with
-    | Play (n, Self) -> Fortune.Game.play n game
-    | Play (n, AsMoney) -> Fortune.Game.play_as_money n game
-    | Play (n, WithColor c) -> Fortune.Game.play_as_color n c game
+    | Play (n, as_) -> exec_play n game as_
     | End_round -> Ok (Fortune.Game.next_round game)
   in
   match next with
