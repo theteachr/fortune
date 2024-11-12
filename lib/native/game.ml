@@ -56,19 +56,18 @@ let next_round game =
   draw_two { game with players = Round.step game.players; played_cards = [] }
 
 let use_player_card n game =
-  let player = current_player game in
-  player
-  |> Player.use_card n
-  |> Option.to_result ~none:(`Invalid_index (List.length player.hand - 1))
+  if List.length game.played_cards = 3 then Error `Plays_exhausted
+  else
+    let player = current_player game in
+    player
+    |> Player.use_card n
+    |> Option.to_result ~none:(`Invalid_index (List.length player.hand - 1))
 
-(* --- play functions --- *)
 let ( let* ) = Result.bind
 
-let player_moves_over game =
-  if List.length game.played_cards = 3 then Error `Moves_over else Ok game
+(* --- PLAY FUNCTIONS --- *)
 
 let play n game =
-  let* game = player_moves_over game in
   let* card, player = use_player_card n game in
   match card with
   | Card.Property card ->
@@ -88,7 +87,6 @@ let play n game =
   | _ -> failwith "TODO"
 
 let play_as_money n game =
-  let* game = player_moves_over game in
   let* card, player = use_player_card n game in
   let* money =
     match card with
@@ -102,7 +100,6 @@ let play_as_money n game =
   |> Result.ok
 
 let play_as_color n color game =
-  let* game = player_moves_over game in
   let* card, player = use_player_card n game in
   let* property =
     match card with
