@@ -430,7 +430,6 @@ let%expect_test "play pass go" =
     6. GREEN
     31. M4
     52. JUST SAY NO
-    75. PASS GO
     76. PASS GO
     82. SKYBLUE BROWN
     91. WILD PROPERTY

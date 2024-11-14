@@ -65,6 +65,12 @@ let ( let* ) = Result.bind
 
 (* --- PLAY FUNCTIONS --- *)
 
+let play_action action game =
+  match action with
+  | Action.PassGo ->
+      game |> draw_two |> add_played_card (Action action) |> Result.ok
+  | _ -> failwith "TODO"
+
 let play n game =
   let* card, player = use_player_card n game in
   match card with
@@ -80,9 +86,7 @@ let play n game =
       |> set_current_player (Player.add_money card player)
       |> add_played_card (Money card)
       |> Result.ok
-  | Card.Action (PassGo as action) ->
-      game |> draw_two |> add_played_card (Action action) |> Result.ok
-  | _ -> failwith "TODO"
+  | Card.Action action -> play_action action (set_current_player player game)
 
 let play_as_money n game =
   let* card, player = use_player_card n game in
