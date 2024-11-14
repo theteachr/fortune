@@ -429,7 +429,6 @@ let%expect_test "play pass go" =
     0. GREEN
     1. WILD PROPERTY
     2. BLUE
-    3. PASS GO
     4. SKYBLUE BROWN
     5. M4
     6. RENT: BROWN SKYBLUE
