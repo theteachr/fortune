@@ -1,7 +1,12 @@
-type t =
+type k =
   | Money of int
   | Property of Property.card
   | Action of Action.t
+
+type t = {
+  id: int;
+  kind: k;
+}
 
 module Used = struct
   type t =

@@ -71,7 +71,9 @@ let default =
       3 *. Card.wild_rent;
     ]
   in
-  properties @ monies @ actions @ wild_properties @ wild_rents |> List.flatten
+  properties @ monies @ actions @ wild_properties @ wild_rents
+  |> List.flatten
+  |> List.mapi (fun id kind -> Card.{ id; kind })
 
 let take n deck =
   let rec take' n cards = function

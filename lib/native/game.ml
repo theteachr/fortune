@@ -58,9 +58,7 @@ let next_round game =
 let use_player_card n game =
   if List.length game.played_cards < 3 then
     let player = current_player game in
-    player
-    |> Player.use_card n
-    |> Option.to_result ~none:(`Invalid_index (List.length player.hand - 1))
+    player |> Player.use_card n |> Option.to_result ~none:`Invalid_index
   else Error `Plays_exhausted
 
 let ( let* ) = Result.bind
