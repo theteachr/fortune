@@ -40,10 +40,7 @@ let show_indexed show items =
   |> List.mapi (fun i item -> Printf.sprintf "%d. %s" i (show item))
   |> String.concat "\n"
 
-let show_items show items =
-  items
-  |> List.map show
-  |> String.concat "\n"
+let show_items show items = items |> List.map show |> String.concat "\n"
 
 module Make (Color : sig
   val show : Fortune.Color.t -> string
