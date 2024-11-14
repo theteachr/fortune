@@ -43,7 +43,14 @@ let exec_play n game = function
 let exec Ui.{ game; _ } command =
   let next =
     match command with
-    | Play (n, as_) -> exec_play n game as_
+    | Play (n, as_) ->
+        Fortune.(
+          game
+          |> Game.current_player
+          |> Player.use_card n
+          |> Option.to_result ~none:`Invalid_index
+          |> Fun.flip Result.bind (fun (card, player) ->
+                 exec_play card (Game.set_current_player player game) as_))
     | End_round -> Ok (Fortune.Game.next_round game)
   in
   match next with
