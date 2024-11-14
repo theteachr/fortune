@@ -35,6 +35,16 @@ module Color_ascii = struct
     | Yellow -> "YELLOW"
 end
 
+let show_indexed show items =
+  items
+  |> List.mapi (fun i item -> Printf.sprintf "%d. %s" i (show item))
+  |> String.concat "\n"
+
+let show_items show items =
+  items
+  |> List.map show
+  |> String.concat "\n"
+
 module Make (Color : sig
   val show : Fortune.Color.t -> string
 end) =
@@ -48,11 +58,6 @@ struct
     match read_line () with
     | "q" -> None
     | line -> Some line
-
-  let show_indexed show items =
-    items
-    |> List.mapi (fun i item -> Printf.sprintf "%d. %s" i (show item))
-    |> String.concat "\n"
 
   module Property = struct
     open Fortune.Property
@@ -115,7 +120,11 @@ struct
   module Player = struct
     open Fortune.Player
 
-    let show_hand hand = show_indexed Card.show hand
+    let show_hand hand =
+      show_items
+        (fun (id, card) -> Printf.sprintf "%d. %s" id (Card.show card))
+        (Hand.to_list hand)
+
     let show_properties properties = show_indexed Property.show properties
     let show_bank bank = show_indexed Money.show bank
 
