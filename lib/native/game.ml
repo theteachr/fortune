@@ -55,12 +55,6 @@ let next_round game =
   (* TODO: Ask the current player to discard if they have > 7 *)
   draw_two { game with players = Round.step game.players; played_cards = [] }
 
-let use_player_card n game =
-  if List.length game.played_cards < 3 then
-    let player = current_player game in
-    player |> Player.use_card n |> Option.to_result ~none:`Invalid_index
-  else Error `Plays_exhausted
-
 let ( let* ) = Result.bind
 
 (* --- PLAY FUNCTIONS --- *)
@@ -71,25 +65,27 @@ let play_action action game =
       game |> draw_two |> add_played_card (Action action) |> Result.ok
   | _ -> failwith "TODO"
 
-let play n game =
-  let* card, player = use_player_card n game in
+let play card game =
+  (* XXX: Check if the player has exhausted their plays. *)
+  let* _ =
+    if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
+  in
   match card with
   | Card.Property card ->
       let* card = Property.use card in
       game
-      |> set_current_player (Player.add_property card player)
+      |> set_current_player (game |> current_player |> Player.add_property card)
       |> add_played_card (Property card)
       |> Result.ok
   | Card.Money value ->
       let card = Money.M value in
       game
-      |> set_current_player (Player.add_money card player)
+      |> set_current_player (game |> current_player |> Player.add_money card)
       |> add_played_card (Money card)
       |> Result.ok
-  | Card.Action action -> play_action action (set_current_player player game)
+  | Card.Action action -> play_action action game
 
-let play_as_money n game =
-  let* card, player = use_player_card n game in
+let play_as_money card game =
   let* money =
     match card with
     | Card.Money value -> Ok (Money.M value)
@@ -97,18 +93,17 @@ let play_as_money n game =
     | _ -> Error `Not_monetizable
   in
   game
-  |> set_current_player (Player.add_money money player)
+  |> set_current_player (game |> current_player |> Player.add_money money)
   |> add_played_card (Money money)
   |> Result.ok
 
-let play_as_color n color game =
-  let* card, player = use_player_card n game in
+let play_as_color card color game =
   let* property =
     match card with
     | Card.Property card -> Property.use ~color card
     | _ -> Error `Not_a_property
   in
   game
-  |> set_current_player (Player.add_property property player)
+  |> set_current_player (game |> current_player |> Player.add_property property)
   |> add_played_card (Property property)
   |> Result.ok

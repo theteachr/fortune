@@ -1,7 +1,9 @@
+open Fortune
+
 type play =
   | Self
   | AsMoney
-  | WithColor of Fortune.Color.t
+  | WithColor of Color.t
 
 type t =
   | Play of int * play
@@ -20,9 +22,7 @@ let parse line =
         | [ "p" ] | [] -> Some Self
         | [ "m" ] -> Some AsMoney
         | [ color ] ->
-            color
-            |> Fortune.Color.of_string
-            |> Option.map (fun c -> WithColor c)
+            color |> Color.of_string |> Option.map (fun c -> WithColor c)
         | _ -> None
       in
       Some (Play (index, command))
@@ -35,17 +35,24 @@ let message = function
   | `Plays_exhausted -> "You can't play more than 3 cards in a round."
   | `Invalid_index -> "Please enter a valid number."
 
-let exec_play n game = function
-  | Self -> Fortune.Game.play n game
-  | AsMoney -> Fortune.Game.play_as_money n game
-  | WithColor c -> Fortune.Game.play_as_color n c game
+let exec_play card game = function
+  | Self -> Game.play card game
+  | AsMoney -> Game.play_as_money card game
+  | WithColor c -> Game.play_as_color card c game
 
-let exec Ui.{ game; _ } command =
+let exec (ui : Ui.t) command =
+  let ( >>= ) = Result.bind in
   let next =
     match command with
-    | Play (n, as_) -> exec_play n game as_
-    | End_round -> Ok (Fortune.Game.next_round game)
+    | Play (n, as_) ->
+        ui.game
+        |> Game.current_player
+        |> Player.use_card n
+        |> Option.to_result ~none:`Invalid_index
+        >>= fun (card, player) ->
+        exec_play card (Game.set_current_player player ui.game) as_
+    | End_round -> Ok (Game.next_round ui.game)
   in
   match next with
-  | Ok game -> Ui.{ game; error_message = None }
-  | Error e -> Ui.{ game; error_message = Some (message e) }
+  | Ok game -> { ui with game }
+  | Error e -> { ui with error_message = Some (message e) }
