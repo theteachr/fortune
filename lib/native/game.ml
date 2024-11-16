@@ -86,6 +86,9 @@ let play card game =
   | Card.Action action -> play_action action game
 
 let play_as_money card game =
+  let* _ =
+    if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
+  in
   let* money =
     match card with
     | Card.Money value -> Ok (Money.M value)
@@ -98,6 +101,9 @@ let play_as_money card game =
   |> Result.ok
 
 let play_as_color card color game =
+  let* _ =
+    if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
+  in
   let* property =
     match card with
     | Card.Property card -> Property.use ~color card

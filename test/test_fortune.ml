@@ -386,6 +386,7 @@ let%expect_test "disallow playing more than 3 cards" =
   |> exec_play (31, AsMoney)
   |> exec_play (76, AsMoney)
   |> exec_play (1, Self)
+  |> exec_play (52, AsMoney)
   |> render;
   [%expect
     {|
