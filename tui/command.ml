@@ -4,6 +4,7 @@ type play =
   | Self
   | AsMoney
   | WithColor of Color.t
+  | WithChoice of Dual.choice
 
 type t =
   | Play of int * play
@@ -21,6 +22,8 @@ let parse line =
         match rest with
         | [ "p" ] | [] -> Some Self
         | [ "m" ] -> Some AsMoney
+        | [ "l" ] -> Some (WithChoice L)
+        | [ "r" ] -> Some (WithChoice R)
         | [ color ] ->
             color |> Color.of_string |> Option.map (fun c -> WithColor c)
         | _ -> None
@@ -34,11 +37,14 @@ let message = function
   | `Not_a_property -> "You can't play that card as a property."
   | `Plays_exhausted -> "You can't play more than 3 cards in a round."
   | `Invalid_index -> "Please enter a valid number."
+  | `Invalid_ctx ->
+      "You entered a bad context." (* TODO: Improve this error message *)
 
 let exec_play card game = function
   | Self -> Game.play card game
-  | AsMoney -> Game.play_as_money card game
-  | WithColor c -> Game.play_as_color card c game
+  | AsMoney -> Game.play ~ctx:`Money card game
+  | WithColor c -> Game.play ~ctx:(`Color c) card game
+  | WithChoice c -> Game.play ~ctx:(`Choice c) card game
 
 let exec (ui : Ui.t) command =
   let ( >>= ) = Result.bind in

@@ -59,57 +59,42 @@ let ( let* ) = Result.bind
 
 (* --- PLAY FUNCTIONS --- *)
 
+let play_property ?ctx (property : Property.card) game =
+  let* property =
+    match (ctx, property) with
+    | Some (`Color c), Simple color when color != c -> Error `Invalid_color
+    | Some `Money, Simple _ -> Error `Not_monetizable
+    | _, Property.Simple color -> Ok (Property.use_simple color)
+    | Some (`Choice c), Property.Dual dual -> Ok (Property.use_dual dual c)
+    | Some (`Color c), Property.Wild w -> Ok (Property.use_wild w c)
+    | None, _ -> Error `Missing_color
+    | _ -> Error `Invalid_ctx
+  in
+  let player = game |> current_player |> Player.add_property property in
+  game
+  |> set_current_player player
+  |> add_played_card (Property property)
+  |> Result.ok
+
 let play_action action game =
   match action with
   | Action.PassGo ->
       game |> draw_two |> add_played_card (Action action) |> Result.ok
   | _ -> failwith "TODO"
 
-let play card game =
+let play_money money game =
+  game
+  |> set_current_player (game |> current_player |> Player.add_money money)
+  |> add_played_card (Money money)
+
+let play ?ctx card game =
   (* XXX: Check if the player has exhausted their plays. *)
   let* _ =
     if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
   in
   match card with
-  | Card.Property card ->
-      let* card = Property.use card in
-      game
-      |> set_current_player (game |> current_player |> Player.add_property card)
-      |> add_played_card (Property card)
-      |> Result.ok
-  | Card.Money value ->
-      let card = Money.M value in
-      game
-      |> set_current_player (game |> current_player |> Player.add_money card)
-      |> add_played_card (Money card)
-      |> Result.ok
+  | Card.Property card -> play_property ?ctx card game
+  | Card.Money value -> Ok (play_money (Money.M value) game)
+  | Card.Action action when ctx = Some `Money ->
+      Ok (play_money (Money.Action action) game)
   | Card.Action action -> play_action action game
-
-let play_as_money card game =
-  let* _ =
-    if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
-  in
-  let* money =
-    match card with
-    | Card.Money value -> Ok (Money.M value)
-    | Card.Action action -> Ok (Action action)
-    | _ -> Error `Not_monetizable
-  in
-  game
-  |> set_current_player (game |> current_player |> Player.add_money money)
-  |> add_played_card (Money money)
-  |> Result.ok
-
-let play_as_color card color game =
-  let* _ =
-    if List.length game.played_cards < 3 then Ok () else Error `Plays_exhausted
-  in
-  let* property =
-    match card with
-    | Card.Property card -> Property.use ~color card
-    | _ -> Error `Not_a_property
-  in
-  game
-  |> set_current_player (game |> current_player |> Player.add_property property)
-  |> add_played_card (Property property)
-  |> Result.ok

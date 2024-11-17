@@ -220,7 +220,7 @@ let%expect_test "display error on trying to play property card as money" =
     |}]
 
 let%expect_test "play wild property - first color" =
-  default_game |> exec_play (82, WithColor SkyBlue) |> render;
+  default_game |> exec_play (82, WithChoice L) |> render;
   [%expect
     {|
     ocaml
@@ -252,7 +252,7 @@ let%expect_test "play wild property - first color" =
     |}]
 
 let%expect_test "play wild property - second color" =
-  default_game |> exec_play (82, WithColor Brown) |> render;
+  default_game |> exec_play (82, WithChoice R) |> render;
   [%expect
     {|
     ocaml
@@ -313,7 +313,7 @@ let%expect_test "play wild property with a wrong color" =
 
     84 card(s) left in the deck.
 
-    [You can't play that card with that color.]
+    [You entered a bad context.]
     |}]
 
 let%expect_test "play very wild card" =
@@ -382,7 +382,7 @@ let%expect_test "play very wild card" =
 
 let%expect_test "disallow playing more than 3 cards" =
   default_game
-  |> exec_play (82, WithColor SkyBlue)
+  |> exec_play (82, WithChoice L)
   |> exec_play (31, AsMoney)
   |> exec_play (76, AsMoney)
   |> exec_play (1, Self)

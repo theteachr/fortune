@@ -17,5 +17,8 @@ type t =
 val color : t -> Color.t
 val wild : card
 
-val use :
-  ?color:Color.t -> card -> (t, [> `Invalid_color | `Missing_color ]) result
+(* Activation Functions *)
+
+val use_simple : simple -> t
+val use_dual : dual -> Dual.choice -> t
+val use_wild : wild -> Color.t -> t
