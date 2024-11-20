@@ -11,7 +11,7 @@ type card =
 (** [t] represents a card that is currently used by a player (in their properties section). *)
 type t =
   | Simple of Color.t
-  | Dual of Dual.t * Dual.choice
+  | Dual of Dual.active
   | Wild of Color.t
 
 val color : t -> Color.t

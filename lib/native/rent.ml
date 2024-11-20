@@ -1,6 +1,6 @@
 type t =
   | Wild
-  | Dual of Color.t * Color.t
+  | Dual of Dual.t
 
 let value = function
   | Wild -> 3

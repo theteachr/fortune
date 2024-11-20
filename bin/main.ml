@@ -13,5 +13,5 @@ let () =
   |> Seq.of_dispenser
   |> Seq.filter_map Tui.Command.parse
   |> Seq.scan Tui.Command.exec game
-  |> Seq.take_while (fun Tui.Ui.{ game; _ } -> Game.is_not_over game)
+  |> Seq.take_while (Fun.negate Ui.game_over)
   |> Seq.iter Ui.render

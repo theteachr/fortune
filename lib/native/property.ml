@@ -9,7 +9,7 @@ type card =
 
 type t =
   | Simple of Color.t
-  | Dual of Dual.t * Dual.choice
+  | Dual of Dual.active
   | Wild of Color.t
 
 let color (card : t) =

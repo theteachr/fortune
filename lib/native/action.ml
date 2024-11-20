@@ -2,7 +2,7 @@ type building =
   | House
   | Hotel
 
-type t =
+type action =
   | DealBreaker
   | ForcedDeal
   | SlyDeal
@@ -10,11 +10,29 @@ type t =
   | DebtCollector
   | Birthday
   | DoubleTheRent
-  | Building of building
   | PassGo
+
+type t =
+  | Action of action
+  | Building of building
   | Rent of Rent.t
 
-let value = function
+module Used = struct
+  type rent =
+    | Wild of Color.t
+    | Dual of Dual.active
+
+  type t =
+    | Regular of action
+    | Rent of rent
+
+  let reset = function
+    | Regular a -> Action a
+    | Rent (Wild _) -> Rent Wild
+    | Rent (Dual (colors, _)) -> Rent (Dual colors)
+end
+
+let action_value = function
   | DealBreaker -> 5
   | ForcedDeal -> 3
   | SlyDeal -> 3
@@ -22,7 +40,13 @@ let value = function
   | DebtCollector -> 3
   | Birthday -> 2
   | DoubleTheRent -> 1
-  | Building House -> 3
-  | Building Hotel -> 4
   | PassGo -> 1
-  | Rent rent -> Rent.value rent
+
+let building_value = function
+  | House -> 3
+  | Hotel -> 4
+
+let value = function
+  | Action a -> action_value a
+  | Building b -> building_value b
+  | Rent r -> Rent.value r

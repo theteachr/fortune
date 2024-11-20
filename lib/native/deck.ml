@@ -14,7 +14,7 @@ let shuffle ?seed d =
 
 let default =
   let properties =
-    let ( * ) n color = n *. Card.simple_property color in
+    let ( * ) n color = n *. Card.make_simple_property color in
     [
       2 * Blue;
       2 * Brown;
@@ -29,11 +29,11 @@ let default =
     ]
   in
   let monies =
-    let ( * ) n value = n *. Card.money value in
+    let ( * ) n value = n *. Card.make_money value in
     [ 2 * 5; 3 * 4; 3 * 3; 5 * 2; 6 * 1; 1 * 10 ]
   in
   let actions =
-    let ( * ) n action = n *. Card.action action in
+    let ( * ) n action = n *. Card.make_action action in
     [
       2 * DealBreaker;
       3 * JustSayNo;
@@ -41,14 +41,16 @@ let default =
       3 * ForcedDeal;
       3 * DebtCollector;
       3 * Birthday;
-      3 * Building House;
-      2 * Building Hotel;
       2 * DoubleTheRent;
       10 * PassGo;
     ]
   in
+  let buildings =
+    let ( * ) n building = n *. Card.make_building building in
+    [ 3 * House; 2 * Hotel ]
+  in
   let wild_properties =
-    let ( * ) n colors = n *. Card.dual_property colors in
+    let ( * ) n colors = n *. Card.make_dual_property colors in
     [
       1 * (SkyBlue, Brown);
       1 * (SkyBlue, Black);
@@ -57,21 +59,21 @@ let default =
       1 * (Blue, Green);
       1 * (Green, Black);
       1 * (Black, Turquoise);
-      2 *. Card.wild_property;
+      2 *. Card.make_wild_property;
     ]
   in
   let wild_rents =
-    let ( * ) n colors = n *. Card.rent colors in
+    let ( * ) n colors = n *. Card.make_rent colors in
     [
       2 * (Green, Blue);
       2 * (Brown, SkyBlue);
       2 * (Magenta, Orange);
       2 * (Black, Turquoise);
       2 * (Red, Yellow);
-      3 *. Card.wild_rent;
+      3 *. Card.make_wild_rent;
     ]
   in
-  properties @ monies @ actions @ wild_properties @ wild_rents
+  properties @ monies @ actions @ buildings @ wild_properties @ wild_rents
   |> List.flatten
   |> List.mapi (fun id kind -> Card.{ id; kind })
 
@@ -84,3 +86,4 @@ let take n deck =
   take' n [] deck
 
 let add card deck = card :: deck
+let of_list cards = cards

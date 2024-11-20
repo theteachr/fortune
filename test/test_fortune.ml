@@ -52,6 +52,7 @@ let%expect_test "default game" =
 
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -86,6 +87,7 @@ let%expect_test "play simple property cards" =
 
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}];
@@ -117,6 +119,7 @@ let%expect_test "play simple property cards" =
     BLUE
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -149,6 +152,7 @@ let%expect_test "play a money card" =
     M4
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -182,6 +186,7 @@ let%expect_test "play action cards as money" =
     M4 (JUST SAY NO)
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -215,6 +220,7 @@ let%expect_test "display error on trying to play property card as money" =
 
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     [You can't play that card as money.]
     |}]
@@ -247,6 +253,7 @@ let%expect_test "play wild property - first color" =
     [SKYBLUE] BROWN
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -279,6 +286,7 @@ let%expect_test "play wild property - second color" =
     SKYBLUE [BROWN]
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -312,6 +320,7 @@ let%expect_test "play wild property with a wrong color" =
 
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     [You entered a bad context.]
     |}]
@@ -346,6 +355,7 @@ let%expect_test "play very wild card" =
 
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}];
@@ -376,6 +386,7 @@ let%expect_test "play very wild card" =
     BLACK [WILD]
 
     84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
     []
     |}]
@@ -390,34 +401,35 @@ let%expect_test "disallow playing more than 3 cards" =
   |> render;
   [%expect
     {|
-      ocaml
+    ocaml
 
-      Hand -
+    Hand -
 
-      1. BLUE
-      52. JUST SAY NO
-      75. PASS GO
-      96. RENT: BROWN SKYBLUE
+    1. BLUE
+    52. JUST SAY NO
+    75. PASS GO
+    96. RENT: BROWN SKYBLUE
 
-      Bank -
+    Bank -
 
-      0. M1 (PASS GO)
-      1. M4
+    0. M1 (PASS GO)
+    1. M4
 
-      Properties -
+    Properties -
 
-      0. [SKYBLUE] BROWN
+    0. [SKYBLUE] BROWN
 
-      This turn -
+    This turn -
 
-      M1 (PASS GO)
-      M4
-      [SKYBLUE] BROWN
+    M1 (PASS GO)
+    M4
+    [SKYBLUE] BROWN
 
-      84 card(s) left in the deck.
+    84 card(s) left in the deck.
+    0 card(s) in the play pile.
 
-      [You can't play more than 3 cards in a round.]
-      |}]
+    [You can't play more than 3 cards in a round.]
+    |}]
 
 let%expect_test "play pass go" =
   default_game |> exec_play (75, Self) |> render;
@@ -449,6 +461,7 @@ let%expect_test "play pass go" =
     PASS GO
 
     82 card(s) left in the deck.
+    1 card(s) in the play pile.
 
     []
     |}]
@@ -457,31 +470,32 @@ let%expect_test "invalid index" =
   default_game |> exec_play (10, Self) |> render;
   [%expect
     {|
-      ocaml
+    ocaml
 
-      Hand -
+    Hand -
 
-      1. BLUE
-      31. M4
-      52. JUST SAY NO
-      75. PASS GO
-      76. PASS GO
-      82. SKYBLUE BROWN
-      96. RENT: BROWN SKYBLUE
+    1. BLUE
+    31. M4
+    52. JUST SAY NO
+    75. PASS GO
+    76. PASS GO
+    82. SKYBLUE BROWN
+    96. RENT: BROWN SKYBLUE
 
-      Bank -
-
-
-
-      Properties -
+    Bank -
 
 
 
-      This turn -
+    Properties -
 
 
 
-      84 card(s) left in the deck.
+    This turn -
 
-      [Please enter a valid number.]
-      |}]
+
+
+    84 card(s) left in the deck.
+    0 card(s) in the play pile.
+
+    [Please enter a valid number.]
+    |}]

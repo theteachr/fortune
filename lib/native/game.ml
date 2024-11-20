@@ -17,7 +17,7 @@ end
 
 type t = {
   draw_pile: Deck.t;
-  play_pile: Card.t list;
+  play_pile: Action.Used.t list;
   players: Player.t Round.t;
   played_cards: Card.Used.t list;
 }
@@ -30,13 +30,32 @@ let set_current_player player game =
 let add_played_card card game =
   { game with played_cards = card :: game.played_cards }
 
-let is_not_over _ = true
+let is_over _ = false (* TODO *)
 
-let draw_two game =
-  (* TODO: Handle the case where the deck does not have enough cards *)
-  let cards, draw_pile = Deck.take 2 game.draw_pile in
-  let player = List.fold_left Player.take (current_player game) cards in
-  { (set_current_player player game) with draw_pile }
+let draw ?(n = 2) game =
+  let cards, draw_pile = Deck.take n game.draw_pile in
+  (* If there aren't enough cards in the deck, take the remaining after
+     shuffling the play pile, and make that the new draw pile. *)
+  let remaining = n - List.length cards in
+  let additional_cards, draw_pile, play_pile =
+    if remaining > 0 then
+      let deck =
+        game.play_pile
+        |> List.map Action.Used.reset
+        |> List.mapi (fun id action -> Card.{ id; kind = Card.Action action })
+        |> Deck.of_list
+        |> Deck.shuffle
+      in
+      let cards, draw_pile = Deck.take remaining deck in
+      (cards, draw_pile, [])
+    else ([], draw_pile, game.play_pile)
+  in
+  let player =
+    additional_cards
+    |> List.rev_append cards
+    |> List.fold_left Player.take (current_player game)
+  in
+  { (set_current_player player game) with draw_pile; play_pile }
 
 let start deck players =
   (* Distribute 5 cards per player from the deck *)
@@ -49,15 +68,17 @@ let start deck players =
     List.fold_left distribute (deck, []) players
   in
   let players = players |> List.rev |> Round.of_list in
-  draw_two { draw_pile; players; play_pile = []; played_cards = [] }
+  draw { draw_pile; players; play_pile = []; played_cards = [] }
 
 let next_round game =
   (* TODO: Ask the current player to discard if they have > 7 *)
-  draw_two { game with players = Round.step game.players; played_cards = [] }
+  draw { game with players = Round.step game.players; played_cards = [] }
 
 let ( let* ) = Result.bind
 
 (* --- PLAY FUNCTIONS --- *)
+
+let put_center card game = { game with play_pile = card :: game.play_pile }
 
 let play_property ?ctx (property : Property.card) game =
   let* property =
@@ -78,8 +99,13 @@ let play_property ?ctx (property : Property.card) game =
 
 let play_action action game =
   match action with
-  | Action.PassGo ->
-      game |> draw_two |> add_played_card (Action action) |> Result.ok
+  | Action.(Action (PassGo as card)) ->
+      let used = Action.Used.Regular card in
+      game
+      |> draw
+      |> add_played_card @@ Action used
+      |> put_center used
+      |> Result.ok
   | _ -> failwith "TODO"
 
 let play_money money game =
