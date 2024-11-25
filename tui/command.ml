@@ -60,5 +60,5 @@ let exec (ui : Ui.t) command =
     | End_round -> Ok (Game.next_round ui.game)
   in
   match next with
-  | Ok game -> { ui with game }
+  | Ok game -> Ui.{ game; error_message = None }
   | Error e -> { ui with error_message = Some (message e) }
