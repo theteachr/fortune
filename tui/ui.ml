@@ -134,7 +134,7 @@ struct
 
     let show_hand hand =
       show_items
-        (fun (id, card) -> sprintf "%d. %s" id (Card.show card))
+        (fun (id, card) -> sprintf "%3d. %s" id (Card.show card))
         (Hand.to_list hand)
 
     let show_properties properties = show_indexed Property.show properties

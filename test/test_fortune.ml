@@ -31,13 +31,13 @@ let%expect_test "default game" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -66,13 +66,13 @@ let%expect_test "play simple property cards" =
 
     Hand -
 
-    0. BLUE
-    1. BLUE
-    2. BROWN
-    3. BROWN
-    4. GREEN
-    20. RED
-    21. RED
+      0. BLUE
+      1. BLUE
+      2. BROWN
+      3. BROWN
+      4. GREEN
+     20. RED
+     21. RED
 
     Bank -
 
@@ -98,11 +98,11 @@ let%expect_test "play simple property cards" =
 
     Hand -
 
-    1. BLUE
-    3. BROWN
-    4. GREEN
-    20. RED
-    21. RED
+      1. BLUE
+      3. BROWN
+      4. GREEN
+     20. RED
+     21. RED
 
     Bank -
 
@@ -132,12 +132,12 @@ let%expect_test "play a money card" =
 
     Hand -
 
-    1. BLUE
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -165,11 +165,11 @@ let%expect_test "play action cards as money" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -199,13 +199,13 @@ let%expect_test "display error on trying to play property card as money" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -233,12 +233,12 @@ let%expect_test "play wild property - first color" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -266,12 +266,12 @@ let%expect_test "play wild property - second color" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -299,13 +299,13 @@ let%expect_test "play wild property with a wrong color" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -334,13 +334,13 @@ let%expect_test "play very wild card" =
 
     Hand -
 
-    0. WILD PROPERTY
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    96. RENT: BROWN SKYBLUE
+      0. WILD PROPERTY
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -366,12 +366,12 @@ let%expect_test "play very wild card" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -405,10 +405,10 @@ let%expect_test "disallow playing more than 3 cards" =
 
     Hand -
 
-    1. BLUE
-    52. JUST SAY NO
-    75. PASS GO
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     52. JUST SAY NO
+     75. PASS GO
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -439,14 +439,14 @@ let%expect_test "play pass go" =
 
     Hand -
 
-    1. BLUE
-    6. GREEN
-    31. M4
-    52. JUST SAY NO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    91. WILD PROPERTY
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+      6. GREEN
+     31. M4
+     52. JUST SAY NO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     91. WILD PROPERTY
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
@@ -474,13 +474,13 @@ let%expect_test "invalid index" =
 
     Hand -
 
-    1. BLUE
-    31. M4
-    52. JUST SAY NO
-    75. PASS GO
-    76. PASS GO
-    82. SKYBLUE BROWN
-    96. RENT: BROWN SKYBLUE
+      1. BLUE
+     31. M4
+     52. JUST SAY NO
+     75. PASS GO
+     76. PASS GO
+     82. SKYBLUE BROWN
+     96. RENT: BROWN SKYBLUE
 
     Bank -
 
