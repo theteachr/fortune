@@ -97,12 +97,16 @@ let play_property ?ctx (property : Property.card) game =
   |> add_played_card (Property property)
   |> Result.ok
 
+let play_action_reg game = function
+  | Action.Pass_go -> draw game
+  | _ -> failwith "TODO"
+
 let play_action action game =
   match action with
-  | Action.(Action (PassGo as card)) ->
-      let used = Action.Used.Regular card in
-      game
-      |> draw
+  | Action.(Action action) ->
+      let used = Action.Used.Regular action in
+      action
+      |> play_action_reg game
       |> add_played_card @@ Action used
       |> put_center used
       |> Result.ok

@@ -3,14 +3,14 @@ type building =
   | Hotel
 
 type action =
-  | DealBreaker
-  | ForcedDeal
-  | SlyDeal
-  | JustSayNo
-  | DebtCollector
+  | Deal_breaker
+  | Forced_deal
+  | Sly_deal
+  | Just_say_no
+  | Debt_collector
   | Birthday
-  | DoubleTheRent
-  | PassGo
+  | Double_the_rent
+  | Pass_go
 
 type t =
   | Action of action
@@ -33,14 +33,14 @@ module Used = struct
 end
 
 let action_value = function
-  | DealBreaker -> 5
-  | ForcedDeal -> 3
-  | SlyDeal -> 3
-  | JustSayNo -> 4
-  | DebtCollector -> 3
+  | Deal_breaker -> 5
+  | Forced_deal -> 3
+  | Sly_deal -> 3
+  | Just_say_no -> 4
+  | Debt_collector -> 3
   | Birthday -> 2
-  | DoubleTheRent -> 1
-  | PassGo -> 1
+  | Double_the_rent -> 1
+  | Pass_go -> 1
 
 let building_value = function
   | House -> 3

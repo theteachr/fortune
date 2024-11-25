@@ -86,14 +86,14 @@ struct
     open Fortune.Action
 
     let show_action = function
-      | DealBreaker -> "DEAL BREAKER"
-      | ForcedDeal -> "FORCED DEAL"
-      | SlyDeal -> "SLY DEAL"
-      | JustSayNo -> "JUST SAY NO"
-      | DebtCollector -> "DEBT COLLECTOR"
+      | Deal_breaker -> "DEAL BREAKER"
+      | Forced_deal -> "FORCED DEAL"
+      | Sly_deal -> "SLY DEAL"
+      | Just_say_no -> "JUST SAY NO"
+      | Debt_collector -> "DEBT COLLECTOR"
       | Birthday -> "BIRTHDAY"
-      | DoubleTheRent -> "DOUBLE THE RENT"
-      | PassGo -> "PASS GO"
+      | Double_the_rent -> "DOUBLE THE RENT"
+      | Pass_go -> "PASS GO"
 
     let show_building = function
       | House -> "HOUSE"

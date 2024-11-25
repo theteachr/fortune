@@ -35,14 +35,14 @@ let default =
   let actions =
     let ( * ) n action = n *. Card.make_action action in
     [
-      2 * DealBreaker;
-      3 * JustSayNo;
-      3 * SlyDeal;
-      3 * ForcedDeal;
-      3 * DebtCollector;
+      2 * Deal_breaker;
+      3 * Just_say_no;
+      3 * Sly_deal;
+      3 * Forced_deal;
+      3 * Debt_collector;
       3 * Birthday;
-      2 * DoubleTheRent;
-      10 * PassGo;
+      2 * Double_the_rent;
+      10 * Pass_go;
     ]
   in
   let buildings =
