@@ -3,6 +3,8 @@ type t = {
   error_message: string option;
 }
 
+let init game = { game; error_message = None }
+
 open Printf
 
 module Color_unicode = struct
@@ -44,13 +46,16 @@ let show_indexed show items =
 
 let show_items show items = items |> List.map show |> String.concat "\n"
 
+(* XXX: Separate concerns?
+   Everything that's needed by modules in this library is having to be
+   proxied inside [Make]. [init] and [t] are examples. *)
 module Make (Color : sig
   val show : Fortune.Color.t -> string
 end) =
 struct
   type nonrec t = t
 
-  let init game = { game; error_message = None }
+  let init = init
   let game_over { game; _ } = Fortune.Game.is_over game
 
   let read_input () =
