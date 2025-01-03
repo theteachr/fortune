@@ -59,7 +59,13 @@ let draw ?(n = 2) game =
   let player =
     Player.take_many (current_player game) (cards @ remaining_cards)
   in
-  { (set_current_player player game) with draw_pile }
+  (* XXX: Repeated check *)
+  let play_pile =
+    match deck with
+    | Left _ -> []
+    | Right _ -> game.play_pile
+  in
+  { (set_current_player player game) with draw_pile; play_pile }
 
 let start deck players =
   (* Distribute 5 cards per player from the deck *)
