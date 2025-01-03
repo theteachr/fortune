@@ -15,11 +15,18 @@ module Round = struct
     | _ -> failwith "not enough players"
 end
 
+(* TODO: Discard Pile
+   Players can discard anything when they have excess cards at the end of
+   a turn. The type needs to be a [Card.t list]. [play_pile] doesn't cut it. *)
 type t = {
   draw_pile: Deck.t;
   play_pile: Action.Used.t list;
+      (* XXX: We might want these to just be [Action.t]
+         Used actions will be acounted in [played_cards]. *)
   players: Player.t Round.t;
   played_cards: Card.Used.t list;
+      (* XXX: Is this better to be inside another type?
+         Doesn't feel right that it's a field in the record of [t]. *)
 }
 
 let current_player { players; _ } = Round.current players
@@ -33,29 +40,26 @@ let add_played_card card game =
 let is_over _ = false (* TODO *)
 
 let draw ?(n = 2) game =
-  let cards, draw_pile = Deck.take n game.draw_pile in
-  (* If there aren't enough cards in the deck, take the remaining after
-     shuffling the play pile, and make that the new draw pile. *)
-  let remaining = n - List.length cards in
-  let additional_cards, draw_pile, play_pile =
-    if remaining > 0 then
-      let deck =
-        game.play_pile
-        |> List.map Action.Used.reset
-        |> List.mapi (fun id action -> Card.{ id; kind = Card.Action action })
-        |> Deck.of_list
-        |> Deck.shuffle
-      in
-      let cards, draw_pile = Deck.take remaining deck in
-      (cards, draw_pile, [])
-    else ([], draw_pile, game.play_pile)
+  let cards, deck = Deck.take' n game.draw_pile in
+  let remaining_cards, draw_pile =
+    match deck with
+    | Left remaining ->
+        (* There aren't enough cards in the deck. Take the remaining after
+           shuffling the play pile, and make that the new draw pile. *)
+        let deck =
+          game.play_pile
+          |> List.mapi (fun id action ->
+                 Card.{ id; kind = Card.Action (Action.Used.reset action) })
+          |> Deck.of_list
+          |> Deck.shuffle
+        in
+        Deck.take remaining deck
+    | Right deck -> ([], deck)
   in
   let player =
-    additional_cards
-    |> List.rev_append cards
-    |> List.fold_left Player.take (current_player game)
+    Player.take_many (current_player game) (cards @ remaining_cards)
   in
-  { (set_current_player player game) with draw_pile; play_pile }
+  { (set_current_player player game) with draw_pile }
 
 let start deck players =
   (* Distribute 5 cards per player from the deck *)

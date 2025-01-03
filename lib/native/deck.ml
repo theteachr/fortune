@@ -77,13 +77,17 @@ let default =
   |> List.flatten
   |> List.mapi (fun id kind -> Card.{ id; kind })
 
-let take n deck =
+let take' n deck =
   let rec take' n cards = function
-    | deck when n = 0 -> (cards, deck)
-    | [] -> (cards, [])
+    | deck when n = 0 -> (cards, Either.Right deck)
+    | [] -> (cards, Either.left n)
     | card :: rest -> take' (n - 1) (card :: cards) rest
   in
   take' n [] deck
+
+let take n deck =
+  let cards, deck = take' n deck in
+  (cards, Either.fold ~left:(Fun.const []) ~right:Fun.id deck)
 
 let add card deck = card :: deck
 let of_list cards = cards

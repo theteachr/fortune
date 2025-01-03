@@ -12,6 +12,8 @@ let make name = { name; bank = []; properties = []; hand = Hand.empty }
 let take player Card.{ id; kind } =
   { player with hand = Hand.add id kind player.hand }
 
+let take_many player cards = List.fold_left take player cards
+
 let add_property property player =
   { player with properties = property :: player.properties }
 
