@@ -22,3 +22,15 @@ let of_string = function
   | "tur" | "cyan" -> Some Turquoise
   | "y" | "yellow" -> Some Yellow
   | _ -> None
+
+let value = function
+  | Black -> 2
+  | Blue -> 4
+  | Brown -> 1
+  | Green -> 4
+  | Magenta -> 2
+  | Orange -> 2
+  | Red -> 3
+  | SkyBlue -> 1
+  | Turquoise -> 2
+  | Yellow -> 3
