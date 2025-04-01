@@ -1,4 +1,4 @@
-type t = Card.t list
+type 'a t = 'a list
 
 let count = List.length
 let ( *. ) n card = List.init n (Fun.const card)

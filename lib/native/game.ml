@@ -19,10 +19,10 @@ end
    Players can discard anything when they have excess cards at the end of
    a turn. The type needs to be a [Card.t list]. [play_pile] doesn't cut it. *)
 type t = {
-  draw_pile: Deck.t;
+  draw_pile: Card.t Deck.t;
   play_pile: Action.Used.t list;
       (* XXX: We might want these to just be [Action.t]
-         Used actions will be acounted in [played_cards]. *)
+         Used actions will be accounted in [played_cards]. *)
   players: Player.t Round.t;
   played_cards: Card.Used.t list;
       (* XXX: Is this better to be inside another type?
